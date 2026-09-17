@@ -1,0 +1,32 @@
+# ingress-nginx routing. Requires the ingress-nginx controller to be installed
+# (deploy/k8s/up.sh does it when INSTALL_INGRESS=1). In kind the dashboard
+# talks to api-gateway via NodePort 30080 directly for WebSockets; this /api
+# route serves plain HTTP clients (curl, scripts) through the ingress.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cockroach
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /api(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: api-gateway
+                port:
+                  number: 8080
+          - path: /()(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dashboard
+                port:
+                  number: 3000

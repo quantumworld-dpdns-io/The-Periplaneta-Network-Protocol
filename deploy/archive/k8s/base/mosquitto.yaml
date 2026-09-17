@@ -1,0 +1,74 @@
+# Mosquitto broker. Content mirrors deploy/mosquitto/mosquitto.conf.
+# NodePort 31883 so ESP32 devices on the LAN can reach it via <host-ip>:31883
+# (kind maps this through extraPortMappings in deploy/kind-cluster.yaml).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mosquitto-config
+data:
+  mosquitto.conf: |
+    persistence false
+    allow_anonymous true
+    listener 1883
+    listener 9001
+    protocol websockets
+    log_dest stdout
+    max_packet_size 65536
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto
+  labels:
+    app: mosquitto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mosquitto
+  template:
+    metadata:
+      labels:
+        app: mosquitto
+    spec:
+      containers:
+        - name: mosquitto
+          image: eclipse-mosquitto:2
+          ports:
+            - { name: mqtt, containerPort: 1883 }
+            - { name: mqtt-ws, containerPort: 9001 }
+          volumeMounts:
+            - name: config
+              mountPath: /mosquitto/config/mosquitto.conf
+              subPath: mosquitto.conf
+              readOnly: true
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { cpu: 500m, memory: 256Mi }
+          readinessProbe:
+            tcpSocket: { port: 1883 }
+            periodSeconds: 5
+      volumes:
+        - name: config
+          configMap:
+            name: mosquitto-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mosquitto
+  labels:
+    app: mosquitto
+spec:
+  type: NodePort
+  selector:
+    app: mosquitto
+  ports:
+    - name: mqtt
+      port: 1883
+      targetPort: 1883
+      nodePort: 31883
+    - name: mqtt-ws
+      port: 9001
+      targetPort: 9001
+      nodePort: 31901

@@ -1,0 +1,15 @@
+numpy>=1.26
+scipy>=1.11
+matplotlib>=3.8
+h5py>=3.10
+pytest>=8
+mcp>=1.2,<2   # FastMCP API; 2.x renamed it to MCPServer
+reportlab>=4
+qiskit>=2.0
+qiskit-aer>=0.17
+fastapi>=0.115
+uvicorn[standard]>=0.30
+
+# the interoperability layer; see blattella/requirements.txt
+biopython>=1.84
+python-libsbml>=5.20,<6
