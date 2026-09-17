@@ -1,27 +1,6 @@
 # The Periplaneta Protocol
 
-> **Direction change, 2026-09-11.** The project has returned to its original
-> intent: simulate a colony of cockroaches, apply hazards, and study
-> biologically how they are harmed, how they **interact**, adapt and **evolve**,
-> toward drugs and control strategies. The new core is **[`blattella/`](blattella/)**.
->
-> The dashboard was rebuilt with the core, and is interactive: seven pages in
-> English and Traditional Chinese, each driving the real model through an HTTP
-> API (`blattella/api.py`). Moving a slider runs the simulation and the result
-> carries the command line that reproduces it. `just up` serves both.
->
-> Everything else below this banner belongs to the previous direction, a
-> telemetry and sensor-placement study in which individuals were statistically
-> independent of one another. `services/`, `firmware/`, `ml/`, `netsim/` and
-> `deploy/archive/` are **frozen**: last green in CI on 2026-09-11, not rebuilt
-> since, no longer maintained or extended. See `services/README.md` and
-> `deploy/archive/README.md`. One piece stayed in service, `netsim/renewal.py`,
-> which the neural readout uses. The assessment that prompted the change is in
-> `.claude/PLAN.md`.
->
-> Note on the name: the species under study is now *Blattella germanica*, the
-> German cockroach, because the resistance, control and genome literature is
-> concentrated there. The repository keeps its name to avoid breaking links.
+
 
 
 A cockroach-based bio-industrial **sensing / networking / evolving simulation
