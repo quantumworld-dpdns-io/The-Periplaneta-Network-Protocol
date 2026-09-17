@@ -1,0 +1,19 @@
+# What the model and its API need. netsim/requirements.txt is the superset used
+# for development; this is the lean list the API image installs.
+#
+# Keep both files in step. CI installs netsim/requirements.txt and nothing else,
+# so a dependency added only here is a dependency no CI job ever exercises.
+numpy>=1.26
+scipy>=1.11
+matplotlib>=3.8          # experiment.plot(); the API image could not run `cli compare` without it
+fastapi>=0.115
+uvicorn[standard]>=0.30
+qiskit>=2.0,<3
+qiskit-aer>=0.17
+
+# --- the interoperability layer -------------------------------------------
+# Imported from exactly one module each (interop/sequence.py, interop/sbml.py)
+# and guarded there, so a missing wheel costs two export formats rather than
+# the package. python-libsbml has no cp315 wheel as of 2026-09; biopython does.
+biopython>=1.84
+python-libsbml>=5.20,<6
