@@ -1002,7 +1002,10 @@ def test_an_archive_built_with_a_colony_contains_the_run_backed_tables(run):
     names = " ".join(z.namelist())
     for want in ("survival", "contact_edges", "contact_nodes"):
         assert want in names
-    assert "## What is missing, and why" not in z.read("README.md").decode()
+    readme = z.read("README.md").decode()
+    for fid in ("survival.csv", "contact_edges.csv", "contact_nodes.csv"):
+        assert f"`{fid}`: needs a simulated colony" not in readme
+    # other optional inputs (e.g. unfetched reference files) may still be listed
 
 
 def test_asking_for_an_unavailable_format_by_name_fails_loudly(tmp_path, monkeypatch):

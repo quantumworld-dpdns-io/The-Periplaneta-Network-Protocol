@@ -201,6 +201,28 @@ function make_twin_params(units; source::AbstractString = "", max_units::Integer
         ))
         length(fitted) >= max_units && break
     end
+    # #region agent log
+    try
+        open("/Users/dennis_leedennis_lee/Documents/GitHub/The-Periplaneta-Network-Protocol/.cursor/debug-64cc09.log", "a") do io
+            keys_seen = isempty(fitted) ? String[] : collect(keys(fitted[1]))
+            println(io, JSON3.write(Dict(
+                "sessionId" => "64cc09",
+                "runId" => "post-fix",
+                "hypothesisId" => "J1",
+                "location" => "ml/src/CockroachML.jl:make_twin_params",
+                "message" => "unit schema keys",
+                "data" => Dict(
+                    "n_units" => length(fitted),
+                    "unit_keys" => keys_seen,
+                    "source" => String(source),
+                    "max_units" => Int(max_units),
+                ),
+                "timestamp" => round(Int, time() * 1000),
+            )))
+        end
+    catch
+    end
+    # #endregion
     return Dict{String,Any}(
         "units"     => fitted,
         "source"    => String(source),

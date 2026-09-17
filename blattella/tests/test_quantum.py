@@ -15,17 +15,57 @@ import pytest
 from blattella.chem import KDR_L993F, VSSC, reference_ddg
 from blattella.chem.classical import ClassicalBackend
 from blattella.chem.compare import compare, report
-from blattella.chem.quantum import (QuantumBackend, exact_ground_energy,
-                                    hubbard_hamiltonian, interaction_energy_ev,
-                                    vqe_ground_energy)
+from blattella.chem.quantum import (QuantumBackend, _pauli_op, dense_matrix,
+                                    exact_ground_energy, hubbard_hamiltonian,
+                                    interaction_energy_ev, vqe_ground_energy)
 
 
 # --------------------------------------------------------------- the Hamiltonian --
 def test_hamiltonian_is_four_qubits_and_hermitian():
     h = hubbard_hamiltonian(-9.0, -8.6, 0.5, 6.0, 4.8, 2.2)
     assert h.num_qubits == 4
-    m = h.to_matrix()
+    m = dense_matrix(h)
     assert np.allclose(m, m.conj().T)
+
+
+def test_numpy_dense_matrix_matches_qiskit_on_the_main_thread():
+    """Endianness/coefficient check against Qiskit, only safe on the main thread."""
+    h = hubbard_hamiltonian(-9.0, -8.6, 0.5, 6.0, 4.8, 2.2)
+    assert np.allclose(dense_matrix(h), h.to_matrix(force_serial=True), atol=1e-10)
+
+
+def test_pauli_op_combines_duplicate_labels_without_qiskit_simplify():
+    op = _pauli_op([("IIII", 0.5), ("IIII", 0.5), ("ZIII", -0.25)])
+    terms = {label: float(np.real(coeff)) for label, coeff in op.to_list()}
+    assert terms["IIII"] == pytest.approx(1.0)
+    assert terms["ZIII"] == pytest.approx(-0.25)
+    assert len(terms) == 2
+
+
+def test_hamiltonian_survives_repeated_construction_from_a_worker_thread():
+    """
+    Qiskit 2.x `SparsePauliOp.simplify` / `to_matrix` segfaults on later calls
+    from Starlette's TestClient thread. Exact energies must keep working there.
+    """
+    import threading
+
+    errors: list[BaseException] = []
+
+    def run() -> None:
+        try:
+            for _ in range(8):
+                h = hubbard_hamiltonian(-9.0, -8.6, 0.5, 6.0, 4.8, 2.2)
+                assert h.num_qubits == 4
+                m = dense_matrix(h)
+                assert np.allclose(m, m.conj().T)
+                assert np.isfinite(exact_ground_energy(h))
+        except BaseException as exc:  # capture the class of crash this guards
+            errors.append(exc)
+
+    worker = threading.Thread(target=run, name="hubbard-worker")
+    worker.start()
+    worker.join()
+    assert errors == []
 
 
 def test_particle_number_penalty_selects_the_two_electron_sector():
@@ -36,7 +76,7 @@ def test_particle_number_penalty_selects_the_two_electron_sector():
     not the system being modelled, so the electron count is constrained.
     """
     def electrons(h) -> float:
-        w, v = np.linalg.eigh(h.to_matrix())
+        w, v = np.linalg.eigh(dense_matrix(h))
         gs = v[:, 0]
         # occupation is the number of set bits, weighted by amplitude
         probs = np.abs(gs) ** 2

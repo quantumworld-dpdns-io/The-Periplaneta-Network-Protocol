@@ -180,8 +180,10 @@ end
     @test d["source"] == "test"
     @test length(d["units"]) == 5
     for u in d["units"]
-        @test Set(keys(u)) == Set(["shape", "rate_hz", "refractory_ms"])
+        @test Set(keys(u)) == Set(["shape", "rate_hz", "refractory_ms", "mean_rate_hz"])
         @test u["shape"] > 0 && u["rate_hz"] > 0 && u["refractory_ms"] >= 0
+        @test u["mean_rate_hz"] > 0
+        @test u["mean_rate_hz"] ≈ 1 / (u["refractory_ms"] / 1000 + u["shape"] / u["rate_hz"]) rtol = 1e-3
     end
     @test length(make_twin_params(fits; source = "x", max_units = 2)["units"]) == 2
 

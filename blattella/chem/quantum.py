@@ -39,10 +39,65 @@ Maturity is `demonstration`. The comparison against the measured reference in
 """
 from __future__ import annotations
 
+import json
 import math
+import threading
+import time
 from dataclasses import dataclass
 
 import numpy as np
+
+# #region agent log
+_HUBBARD_CALLS = 0
+_DEBUG_LOG = "/Users/dennis_leedennis_lee/Documents/GitHub/The-Periplaneta-Network-Protocol/.cursor/debug-64cc09.log"
+
+def _agent_log(hypothesis_id: str, location: str, message: str, data: dict) -> None:
+    payload = {
+        "sessionId": "64cc09",
+        "runId": "post-fix",
+        "hypothesisId": hypothesis_id,
+        "location": location,
+        "message": message,
+        "data": data,
+        "timestamp": int(time.time() * 1000),
+    }
+    line = json.dumps(payload)
+    try:
+        with open(_DEBUG_LOG, "a", encoding="utf-8") as fh:
+            fh.write(line + "\n")
+    except Exception:
+        pass
+    try:
+        import urllib.request
+        req = urllib.request.Request(
+            "http://127.0.0.1:7616/ingest/291dd374-303e-433f-9ed0-c941bdf4665c",
+            data=line.encode(),
+            headers={"Content-Type": "application/json", "X-Debug-Session-Id": "64cc09"},
+            method="POST",
+        )
+        urllib.request.urlopen(req, timeout=0.5).read()
+    except Exception:
+        pass
+# #endregion
+
+
+def _pauli_op(terms: list[tuple[str, float]]):
+    """Build a SparsePauliOp without Qiskit's Rust `simplify`.
+
+    `SparsePauliOp.simplify` calls `unordered_unique` in the native extension
+    and segfaults on later invocations from Starlette's TestClient worker
+    thread (GitHub Actions and local `pytest blattella/tests`). Combining
+    duplicate labels in Python is enough for this 4-qubit model.
+    """
+    from qiskit.quantum_info import SparsePauliOp
+
+    acc: dict[str, complex] = {}
+    for label, coeff in terms:
+        acc[label] = acc.get(label, 0.0) + complex(coeff)
+    cleaned = [(label, coeff) for label, coeff in acc.items() if abs(coeff) > 1e-12]
+    if not cleaned:
+        cleaned = [("IIII", 0.0)]
+    return SparsePauliOp.from_list(cleaned)
 
 from ..params import Param, Source, named
 from .interface import DDGResult, Mutation, Target
@@ -88,6 +143,38 @@ P = named(
 
 EV_TO_KCAL = 23.060548
 
+_PAULI = {
+    "I": np.array([[1, 0], [0, 1]], dtype=complex),
+    "X": np.array([[0, 1], [1, 0]], dtype=complex),
+    "Y": np.array([[0, -1j], [1j, 0]], dtype=complex),
+    "Z": np.array([[1, 0], [0, -1]], dtype=complex),
+}
+
+
+def _pauli_string_matrix(label: str) -> np.ndarray:
+    """Kronecker product for a Qiskit Pauli label (leftmost = high qubit)."""
+    mat = np.array([[1.0]], dtype=complex)
+    for ch in label:
+        mat = np.kron(mat, _PAULI[ch])
+    return mat
+
+
+def dense_matrix(op) -> np.ndarray:
+    """Dense Hamiltonian without Qiskit's threaded Rust `to_matrix`.
+
+    `to_matrix` (and `simplify`) call into `qiskit._accelerate` and segfault
+    on later Starlette TestClient worker-thread invocations. 4 qubits is 16x16,
+    so expanding Pauli terms in NumPy is cheap and stays in Python.
+    """
+    acc = None
+    for label, coeff in op.to_list():
+        term = complex(coeff) * _pauli_string_matrix(str(label))
+        acc = term if acc is None else acc + term
+    if acc is None:
+        dim = 1 << op.num_qubits
+        return np.zeros((dim, dim), dtype=complex)
+    return acc
+
 
 def hubbard_hamiltonian(eps0: float, eps1: float, t: float, u0: float, u1: float, v: float,
                         n_electrons: int = 2, penalty: float = 20.0):
@@ -102,7 +189,24 @@ def hubbard_hamiltonian(eps0: float, eps1: float, t: float, u0: float, u1: float
     negative; the sector is then Pauli-blocked and no charge transfer is
     possible, which is the entire physics this model exists to capture.
     """
-    from qiskit.quantum_info import SparsePauliOp
+    # #region agent log
+    global _HUBBARD_CALLS
+    _HUBBARD_CALLS += 1
+    qiskit_ver = "unknown"
+    try:
+        import qiskit
+        qiskit_ver = getattr(qiskit, "__version__", "unknown")
+    except Exception as exc:
+        qiskit_ver = f"import-failed:{type(exc).__name__}"
+    _agent_log("B1-B3", "blattella/chem/quantum.py:hubbard_entry", "hubbard_hamiltonian entry", {
+        "call": _HUBBARD_CALLS,
+        "thread": threading.current_thread().name,
+        "ident": threading.get_ident(),
+        "qiskit": qiskit_ver,
+        "penalty": penalty,
+        "n_electrons": n_electrons,
+    })
+    # #endregion
 
     terms: list[tuple[str, float]] = []
 
@@ -147,21 +251,60 @@ def hubbard_hamiltonian(eps0: float, eps1: float, t: float, u0: float, u1: float
         yy[a], yy[b], yy[mid] = "Y", "Y", "Z"
         terms += [("".join(reversed(xx)), -0.5 * t), ("".join(reversed(yy)), -0.5 * t)]
 
-    h = SparsePauliOp.from_list(terms).simplify()
+    # #region agent log
+    labels = [lbl for lbl, _ in terms]
+    _agent_log("B1", "blattella/chem/quantum.py:before_pauli_op", "terms ready for SparsePauliOp", {
+        "call": _HUBBARD_CALLS,
+        "n_terms": len(terms),
+        "n_unique_labels": len(set(labels)),
+        "n_iiii": sum(1 for lbl in labels if lbl == "IIII"),
+        "thread": threading.current_thread().name,
+        "used_simplify": False,
+    })
+    # #endregion
+    h = _pauli_op(terms)
+    # #region agent log
+    _agent_log("B1-B3", "blattella/chem/quantum.py:after_pauli_op", "python-coalesced operator returned", {
+        "call": _HUBBARD_CALLS,
+        "n_ops": len(h),
+        "thread": threading.current_thread().name,
+    })
+    # #endregion
 
     if penalty > 0:
-        num = SparsePauliOp.from_list(
+        num = _pauli_op(
             [("IIII", 2.0)] +
             [("".join(reversed(["Z" if k == i else "I" for k in range(4)])), -0.5) for i in range(4)]
-        ).simplify()
-        shifted = (num - n_electrons * SparsePauliOp.from_list([("IIII", 1.0)])).simplify()
-        h = (h + penalty * (shifted @ shifted)).simplify()
+        )
+        # #region agent log
+        _agent_log("B4", "blattella/chem/quantum.py:after_num_op", "number operator without simplify", {
+            "call": _HUBBARD_CALLS,
+            "n_ops": len(num),
+            "thread": threading.current_thread().name,
+        })
+        # #endregion
+        shifted = num - n_electrons * _pauli_op([("IIII", 1.0)])
+        h = h + penalty * (shifted @ shifted)
+        # #region agent log
+        _agent_log("B4", "blattella/chem/quantum.py:after_penalty", "penalty applied without simplify", {
+            "call": _HUBBARD_CALLS,
+            "n_ops": len(h),
+            "thread": threading.current_thread().name,
+        })
+        # #endregion
     return h
 
 
 def exact_ground_energy(op) -> float:
     """Exact diagonalisation of the qubit Hamiltonian, in eV."""
-    return float(np.linalg.eigvalsh(op.to_matrix())[0])
+    # #region agent log
+    _agent_log("B5", "blattella/chem/quantum.py:exact_ground_energy", "numpy diagonalisation", {
+        "n_ops": len(op),
+        "n_qubits": op.num_qubits,
+        "thread": threading.current_thread().name,
+    })
+    # #endregion
+    return float(np.linalg.eigvalsh(dense_matrix(op))[0])
 
 
 def vqe_ground_energy(op, seed: int = 7, maxiter: int = 4000, restarts: int = 3) -> tuple[float, int]:
@@ -171,21 +314,25 @@ def vqe_ground_energy(op, seed: int = 7, maxiter: int = 4000, restarts: int = 3)
     A hardware-efficient EfficientSU2 ansatz with COBYLA. Returns the energy and
     the number of objective evaluations, so a run that failed to converge is
     visible rather than silently reported as a result.
+
+    Expectation values are computed in NumPy. Qiskit's StatevectorEstimator
+    submits work to a thread pool, and those workers segfault in circuit.copy
+    after other native extensions have been loaded (full `pytest blattella/tests`).
     """
     from qiskit.circuit.library import EfficientSU2
-    from qiskit.primitives import StatevectorEstimator
+    from qiskit.quantum_info import Statevector
     from scipy.optimize import minimize
 
+    ham = dense_matrix(op)
     ansatz = EfficientSU2(op.num_qubits, reps=3, entanglement="full")
-    estimator = StatevectorEstimator(seed=seed)
     rng = np.random.default_rng(seed)
     calls = 0
 
     def energy(x: np.ndarray) -> float:
         nonlocal calls
         calls += 1
-        result = estimator.run([(ansatz, op, [x])]).result()
-        return float(np.real(result[0].data.evs[0]))
+        psi = Statevector.from_instruction(ansatz.assign_parameters(x, inplace=False)).data
+        return float(np.real(np.vdot(psi, ham @ psi)))
 
     best = np.inf
     for r in range(restarts):
