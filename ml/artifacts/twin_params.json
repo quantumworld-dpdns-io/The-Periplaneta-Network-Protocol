@@ -1,0 +1,109 @@
+{
+    "units": [
+        {
+            "shape": 0.6492,
+            "rate_hz": 3.8746,
+            "refractory_ms": 2.1523,
+            "mean_rate_hz": 5.8926
+        },
+        {
+            "shape": 0.6524,
+            "rate_hz": 5.3614,
+            "refractory_ms": 1.707,
+            "mean_rate_hz": 8.1043
+        },
+        {
+            "shape": 0.6255,
+            "rate_hz": 2.3385,
+            "refractory_ms": 8.2382,
+            "mean_rate_hz": 3.6269
+        },
+        {
+            "shape": 1.7248,
+            "rate_hz": 15.6557,
+            "refractory_ms": 0.1,
+            "mean_rate_hz": 9.0686
+        },
+        {
+            "shape": 0.465,
+            "rate_hz": 10.2203,
+            "refractory_ms": 1.6328,
+            "mean_rate_hz": 21.2177
+        },
+        {
+            "shape": 1.1951,
+            "rate_hz": 16.2081,
+            "refractory_ms": 0.7421,
+            "mean_rate_hz": 13.427
+        },
+        {
+            "shape": 0.5066,
+            "rate_hz": 4.7225,
+            "refractory_ms": 7.7929,
+            "mean_rate_hz": 8.6906
+        },
+        {
+            "shape": 0.7168,
+            "rate_hz": 0.7977,
+            "refractory_ms": 10.3906,
+            "mean_rate_hz": 1.1001
+        },
+        {
+            "shape": 0.6755,
+            "rate_hz": 3.8987,
+            "refractory_ms": 6.457,
+            "mean_rate_hz": 5.5642
+        },
+        {
+            "shape": 0.5952,
+            "rate_hz": 12.4762,
+            "refractory_ms": 3.8593,
+            "mean_rate_hz": 19.3926
+        },
+        {
+            "shape": 1.2064,
+            "rate_hz": 38.245,
+            "refractory_ms": 1.4101,
+            "mean_rate_hz": 30.3452
+        },
+        {
+            "shape": 0.7736,
+            "rate_hz": 13.9655,
+            "refractory_ms": 4.1562,
+            "mean_rate_hz": 16.7927
+        },
+        {
+            "shape": 0.3454,
+            "rate_hz": 12.3649,
+            "refractory_ms": 1.3933,
+            "mean_rate_hz": 34.098
+        },
+        {
+            "shape": 0.4247,
+            "rate_hz": 14.1393,
+            "refractory_ms": 1.3933,
+            "mean_rate_hz": 31.8166
+        },
+        {
+            "shape": 0.4597,
+            "rate_hz": 8.9744,
+            "refractory_ms": 1.3933,
+            "mean_rate_hz": 19.0053
+        },
+        {
+            "shape": 0.8084,
+            "rate_hz": 23.2528,
+            "refractory_ms": 1.3933,
+            "mean_rate_hz": 27.6556
+        }
+    ],
+    "fitted_at": "2026-09-09T07:57:23Z",
+    "source": "zenodo:10.5281/zenodo.14281 (cockroach AL, n=12) + zenodo:10.5281/zenodo.14607 (locust AL, n=4)",
+    "fields": {
+        "shape": "gamma shape of the ISI distribution",
+        "rate_hz": "gamma RATE PARAMETER 1/theta (not a firing rate)",
+        "refractory_ms": "absolute refractory period",
+        "mean_rate_hz": "firing rate = 1/(refractory_s + shape/rate_hz)"
+    },
+    "note": "mean_rate_hz added 2026-09-10 from the fitted triple after the Python refit (netsim.cli fit-real) showed swarm-gen was reading rate_hz as a firing rate"
+}
