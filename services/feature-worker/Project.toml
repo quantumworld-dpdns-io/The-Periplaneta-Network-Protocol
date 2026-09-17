@@ -1,0 +1,17 @@
+name = "FeatureWorker"
+uuid = "7c9a52d6-4b18-4f0e-9d3a-2c6b8e41f5aa"
+authors = ["The Periplaneta Protocol contributors"]
+version = "0.1.0"
+
+[deps]
+BSON = "fbb218c0-5317-5bc6-957e-2ee96dd4b1f0"
+Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
+NNlib = "872c559c-99b0-510c-b3b7-b6c96a88d5cd"
+RDKafka = "43e2f499-f4c7-585f-8317-cbc2d9c3bf8f"
+
+[compat]
+julia = "1.10"
+BSON = "0.3"
+Flux = "0.16"
+NNlib = "0.9"
+RDKafka = "0.2"
