@@ -1,0 +1,245 @@
+# Application services. Images are built locally (cockroach/<svc>:dev) and
+# loaded into kind by deploy/k8s/up.sh; imagePullPolicy IfNotPresent so no
+# registry is required. Env defaults follow proto/WIRE.md §10.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cockroach-env
+data:
+  KAFKA_BROKERS: redpanda:9092
+  MQTT_URL: mqtt://mosquitto:1883
+  GRID_W: "400"
+  GRID_H: "250"
+  SWARM_NODES: "100000"
+  SWARM_SHARDS: "100"
+  BIN_MS: "100"
+  SEED: "42"
+  API_PORT: "8080"
+  RUST_LOG: info
+---
+# ---------------------------------------------------------------- mqtt-bridge
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mqtt-bridge
+  labels: { app: mqtt-bridge }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: mqtt-bridge }
+  template:
+    metadata:
+      labels: { app: mqtt-bridge }
+    spec:
+      containers:
+        - name: mqtt-bridge
+          image: cockroach/mqtt-bridge:dev
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef: { name: cockroach-env }
+          env:
+            - { name: METRICS_PORT, value: "9102" }
+          ports:
+            - { name: metrics, containerPort: 9102 }
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { cpu: "1", memory: 256Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mqtt-bridge
+spec:
+  selector: { app: mqtt-bridge }
+  ports:
+    - { name: metrics, port: 9102, targetPort: 9102 }
+---
+# ------------------------------------------------------------------ swarm-gen
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swarm-gen
+  labels: { app: swarm-gen }
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate # single deterministic generator; never run two at once
+  selector:
+    matchLabels: { app: swarm-gen }
+  template:
+    metadata:
+      labels: { app: swarm-gen }
+    spec:
+      containers:
+        - name: swarm-gen
+          image: cockroach/swarm-gen:dev
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef: { name: cockroach-env }
+          env:
+            - { name: METRICS_PORT, value: "9100" }
+          ports:
+            - { name: metrics, containerPort: 9100 }
+          resources:
+            requests: { cpu: 500m, memory: 256Mi }
+            limits: { cpu: "2", memory: 1Gi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: swarm-gen
+spec:
+  selector: { app: swarm-gen }
+  ports:
+    - { name: metrics, port: 9100, targetPort: 9100 }
+---
+# ---------------------------------------------------------------- api-gateway
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  labels: { app: api-gateway }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: api-gateway }
+  template:
+    metadata:
+      labels: { app: api-gateway }
+    spec:
+      containers:
+        - name: api-gateway
+          image: cockroach/api-gateway:dev
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef: { name: cockroach-env }
+          ports:
+            - { name: http, containerPort: 8080 }
+          readinessProbe:
+            httpGet: { path: /health, port: 8080 }
+            periodSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            httpGet: { path: /health, port: 8080 }
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          resources:
+            requests: { cpu: 250m, memory: 128Mi }
+            limits: { cpu: "2", memory: 1Gi }
+---
+# NodePort 30080: the dashboard's browser-side WebSocket connects straight to
+# the gateway (NEXT_PUBLIC_API_URL=http://localhost:30080 in kind), which keeps
+# WS out of the ingress path. The Ingress /api route is for plain HTTP clients.
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+spec:
+  type: NodePort
+  selector: { app: api-gateway }
+  ports:
+    - { name: http, port: 8080, targetPort: 8080, nodePort: 30080 }
+---
+# ------------------------------------------------------------- feature-worker
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feature-worker
+  labels: { app: feature-worker }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: feature-worker }
+  template:
+    metadata:
+      labels: { app: feature-worker }
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: feature-worker
+          image: cockroach/feature-worker:dev
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef: { name: cockroach-env }
+          env:
+            - { name: METRICS_PORT, value: "9101" }
+            - { name: JULIA_NUM_THREADS, value: "2" }
+            - { name: DETECTOR, value: "transformer" }
+            - { name: GRU_MODEL, value: "/repo/ml/artifacts/gru.bson" }
+            - { name: TRANSFORMER_MODEL, value: "/repo/ml/artifacts/transformer.bson" }
+          ports:
+            - { name: metrics, containerPort: 9101 }
+          resources:
+            requests: { cpu: "1", memory: 1Gi }
+            limits: { cpu: "2", memory: 2Gi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: feature-worker
+spec:
+  selector: { app: feature-worker }
+  ports:
+    - { name: metrics, port: 9101, targetPort: 9101 }
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: feature-worker
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: feature-worker
+  minReplicas: 1
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 120
+---
+# ------------------------------------------------------------------ dashboard
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard
+  labels: { app: dashboard }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: dashboard }
+  template:
+    metadata:
+      labels: { app: dashboard }
+    spec:
+      containers:
+        - name: dashboard
+          image: cockroach/dashboard:dev
+          imagePullPolicy: IfNotPresent
+          env:
+            - { name: PORT, value: "3000" }
+            - { name: HOSTNAME, value: "0.0.0.0" }
+          ports:
+            - { name: http, containerPort: 3000 }
+          readinessProbe:
+            httpGet: { path: /, port: 3000 }
+            periodSeconds: 5
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits: { cpu: 500m, memory: 512Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard
+spec:
+  type: NodePort
+  selector: { app: dashboard }
+  ports:
+    - { name: http, port: 3000, targetPort: 3000, nodePort: 30000 }
