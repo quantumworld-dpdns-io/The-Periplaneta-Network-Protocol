@@ -1,0 +1,44 @@
+# The Periplaneta Protocol — the model server and the dashboard that drives it.
+#
+#   just up                 # build and run both, then open http://localhost:3000
+#   just down
+#
+# The dashboard is interactive: moving a slider posts to the API, which runs the
+# real simulation and returns both the numbers and the command line that would
+# reproduce them. Nothing is precomputed, so a page can be slow for a moment
+# while a hundred generations actually run.
+#
+# The streaming stack this repository grew out of is in archive/; nothing in the
+# current direction uses it.
+name: periplaneta
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/api.Dockerfile
+    image: periplaneta-api:latest
+    ports:
+      - "${API_PORT:-8000}:8000"
+    restart: unless-stopped
+
+  dashboard:
+    build:
+      context: ../dashboard
+      args:
+        # baked into the client bundle, so it must be the URL the *browser* uses
+        NEXT_PUBLIC_API_URL: "${PUBLIC_API_URL:-http://localhost:8000}"
+    image: periplaneta-dashboard:latest
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${DASHBOARD_PORT:-3000}:3000"
+    restart: unless-stopped
+    healthcheck:
+      # the page is static, so a 200 on / means it is fully serving
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s

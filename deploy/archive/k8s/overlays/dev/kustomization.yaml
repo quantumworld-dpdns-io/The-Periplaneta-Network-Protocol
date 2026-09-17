@@ -1,0 +1,20 @@
+# Dev overlay for a local kind cluster (laptop-sized).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: cockroach
+resources:
+  - ../../base
+patches:
+  - path: env-patch.yaml
+  - path: replicas-patch.yaml
+images:
+  - name: cockroach/mqtt-bridge
+    newTag: dev
+  - name: cockroach/swarm-gen
+    newTag: dev
+  - name: cockroach/api-gateway
+    newTag: dev
+  - name: cockroach/feature-worker
+    newTag: dev
+  - name: cockroach/dashboard
+    newTag: dev
