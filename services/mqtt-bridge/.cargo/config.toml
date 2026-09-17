@@ -1,0 +1,5 @@
+# rdkafka-sys (cmake-build) with the Visual Studio generator hits MAX_PATH inside
+# cargo's deep target dir on Windows; Ninja avoids that. The Dockerfile installs
+# ninja-build so the same setting works in the Linux image.
+[env]
+CMAKE_GENERATOR = "Ninja"

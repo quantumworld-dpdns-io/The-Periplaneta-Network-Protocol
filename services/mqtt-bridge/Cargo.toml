@@ -1,0 +1,30 @@
+[package]
+name = "mqtt-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Cockroach Internet: MQTT <-> Redpanda bridge for HIL (ESP32) nodes"
+
+[lib]
+name = "mqtt_bridge"
+path = "src/lib.rs"
+
+[[bin]]
+name = "mqtt-bridge"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "signal"] }
+rumqttc = "0.24"
+# cmake-build vendors librdkafka (no system lib needed). No ssl/sasl/zlib: plaintext Redpanda only.
+rdkafka = { version = "0.37", default-features = false, features = ["cmake-build", "tokio"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+prometheus = { version = "0.13", default-features = false }
+axum = { version = "0.7", default-features = false, features = ["http1", "tokio", "json"] }
+
+[profile.release]
+opt-level = 2
+debug = false
