@@ -1,0 +1,159 @@
+# FROZEN — the previous direction's full stack. Nothing current uses it.
+#
+#   docker compose -f deploy/archive/docker-compose.yml up -d --build
+#
+# It last passed CI on 2026-09-11 (all three Rust crates and the Julia worker
+# green). It has not been rebuilt since; GitHub Actions is suspended for this
+# repository. See deploy/archive/README.md.
+# Infra services first, then one block per subsystem (A firmware/bridge,
+# B Rust core, C Julia ML, D dashboard). Keep each service inside its block.
+name: cockroach-internet
+
+services:
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v24.2.7
+    command:
+      - redpanda start
+      - --smp 1
+      - --memory 1G
+      - --overprovisioned
+      - --node-id 0
+      - --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr internal://redpanda:9092,external://localhost:19092
+      - --pandaproxy-addr internal://0.0.0.0:8082,external://0.0.0.0:18082
+      - --schema-registry-addr internal://0.0.0.0:8083,external://0.0.0.0:18083
+      - --rpc-addr redpanda:33145
+      - --advertise-rpc-addr redpanda:33145
+      - --mode dev-container
+    ports:
+      - "19092:19092"
+      - "18082:18082"
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  topics-init:
+    image: docker.redpanda.com/redpandadata/redpanda:v24.2.7
+    depends_on:
+      redpanda: { condition: service_healthy }
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        rpk topic create hil.raw        -p 2  -c retention.ms=3600000  --brokers redpanda:9092 || true
+        rpk topic create swarm.bins     -p 16 -c retention.ms=3600000  --brokers redpanda:9092 || true
+        rpk topic create swarm.truth    -p 1  -c retention.ms=86400000 --brokers redpanda:9092 || true
+        rpk topic create interventions  -p 1  -c retention.ms=86400000 --brokers redpanda:9092 || true
+        rpk topic create neuro.features -p 16 -c retention.ms=3600000  --brokers redpanda:9092 || true
+        rpk topic create neuro.alerts   -p 4  -c retention.ms=86400000 --brokers redpanda:9092 || true
+        rpk topic list --brokers redpanda:9092
+
+  console:
+    image: docker.redpanda.com/redpandadata/console:v2.7.2
+    depends_on: [redpanda]
+    environment:
+      KAFKA_BROKERS: redpanda:9092
+    ports:
+      - "18081:8080"
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    ports:
+      - "1883:1883"
+      - "19001:9001"
+
+  # ---- WS-A: mqtt-bridge ---------------------------------------------------
+  mqtt-bridge:
+    build:
+      context: ../../services/mqtt-bridge
+      dockerfile: Dockerfile
+    depends_on:
+      redpanda: { condition: service_healthy }
+      topics-init: { condition: service_completed_successfully }
+      mosquitto: { condition: service_started }
+    environment:
+      MQTT_URL: mqtt://mosquitto:1883
+      KAFKA_BROKERS: redpanda:9092
+      METRICS_PORT: "9102"
+      RUST_LOG: info,rumqttc=warn,rdkafka=warn
+    ports:
+      - "9102:9102"   # GET /hil (last HIL status), /metrics, /health
+    restart: unless-stopped
+  # ---- end WS-A -----------------------------------------------------------
+
+  # ---- WS-B: swarm-gen, api-gateway ----------------------------------------
+  swarm-gen:
+    build: ../services/swarm-gen
+    depends_on:
+      topics-init: { condition: service_completed_successfully }
+    environment:
+      KAFKA_BROKERS: redpanda:9092
+      SWARM_NODES: ${SWARM_NODES:-100000}
+      SWARM_SHARDS: ${SWARM_SHARDS:-100}
+      BIN_MS: ${BIN_MS:-100}
+      SEED: ${SEED:-42}
+      GRID_W: ${GRID_W:-400}
+      GRID_H: ${GRID_H:-250}
+      METRICS_PORT: 9100
+      TWIN_PARAMS: /app/ml/artifacts/twin_params.json
+      RUST_LOG: info,rdkafka=warn
+    volumes:
+      - ../ml/artifacts:/app/ml/artifacts:ro
+    ports:
+      - "9100:9100"
+    restart: unless-stopped
+
+  api-gateway:
+    build: ../services/api-gateway
+    depends_on:
+      topics-init: { condition: service_completed_successfully }
+    environment:
+      KAFKA_BROKERS: redpanda:9092
+      API_PORT: 8080
+      GRID_W: ${GRID_W:-400}
+      GRID_H: ${GRID_H:-250}
+      SWARM_NODES: ${SWARM_NODES:-100000}
+      CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      RUST_LOG: info,rdkafka=warn
+    ports:
+      - "18080:8080"
+    restart: unless-stopped
+  # ---- end WS-B -----------------------------------------------------------
+
+  # ---- WS-C: feature-worker ------------------------------------------------
+  feature-worker:
+    build:
+      context: ../..
+      dockerfile: services/feature-worker/Dockerfile
+    depends_on:
+      redpanda: { condition: service_healthy }
+      topics-init: { condition: service_completed_successfully }
+    environment:
+      KAFKA_BROKERS: redpanda:9092
+      METRICS_PORT: "9101"
+      JULIA_NUM_THREADS: "2"
+      DETECTOR: transformer
+      GRU_MODEL: /repo/ml/artifacts/gru.bson
+      TRANSFORMER_MODEL: /repo/ml/artifacts/transformer.bson
+    volumes:
+      - ../ml/artifacts:/repo/ml/artifacts:ro
+    ports:
+      - "9101:9101"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9101/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 90s
+    restart: unless-stopped
+  # ---- end WS-C -----------------------------------------------------------
+
+  # ---- WS-D: dashboard -- REMOVED ------------------------------------------
+  # The war-room UI this stack served no longer exists. It was deleted when the
+  # dashboard was rebuilt on the model's static export, so building
+  # ../../dashboard here would produce the *current* page, which has no backend
+  # and would not talk to api-gateway. Nothing is served on 3000 by this stack.
+  # ---- end WS-D -----------------------------------------------------------

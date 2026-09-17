@@ -1,0 +1,164 @@
+# Single-node Redpanda (dev-container mode) — mirrors deploy/docker-compose.yml.
+apiVersion: v1
+kind: Service
+metadata:
+  name: redpanda
+  labels:
+    app: redpanda
+spec:
+  clusterIP: None
+  selector:
+    app: redpanda
+  ports:
+    - name: kafka
+      port: 9092
+      targetPort: 9092
+    - name: pandaproxy
+      port: 8082
+      targetPort: 8082
+    - name: schema-registry
+      port: 8083
+      targetPort: 8083
+    - name: admin
+      port: 9644
+      targetPort: 9644
+    - name: rpc
+      port: 33145
+      targetPort: 33145
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redpanda
+  labels:
+    app: redpanda
+spec:
+  serviceName: redpanda
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redpanda
+  template:
+    metadata:
+      labels:
+        app: redpanda
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: redpanda
+          image: docker.redpanda.com/redpandadata/redpanda:v24.2.7
+          args:
+            - redpanda
+            - start
+            - --smp=1
+            - --memory=1G
+            - --overprovisioned
+            - --node-id=0
+            - --mode=dev-container
+            - --kafka-addr=internal://0.0.0.0:9092
+            # Service name resolves cluster-wide; single replica so no ordinal needed.
+            - --advertise-kafka-addr=internal://redpanda:9092
+            - --pandaproxy-addr=internal://0.0.0.0:8082
+            - --schema-registry-addr=internal://0.0.0.0:8083
+            - --rpc-addr=0.0.0.0:33145
+            - --advertise-rpc-addr=redpanda:33145
+          ports:
+            - { name: kafka, containerPort: 9092 }
+            - { name: pandaproxy, containerPort: 8082 }
+            - { name: schema-registry, containerPort: 8083 }
+            - { name: admin, containerPort: 9644 }
+            - { name: rpc, containerPort: 33145 }
+          resources:
+            requests: { cpu: 500m, memory: 1Gi }
+            limits: { cpu: "2", memory: 2Gi }
+          readinessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "rpk cluster health | grep -E 'Healthy:.+true'"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 10
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/redpanda/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi
+---
+# Creates the WIRE.md §3 topics (same rpk commands as compose topics-init).
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: topics-init
+  labels:
+    app: topics-init
+spec:
+  backoffLimit: 20
+  ttlSecondsAfterFinished: 600
+  template:
+    metadata:
+      labels:
+        app: topics-init
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: rpk
+          image: docker.redpanda.com/redpandadata/redpanda:v24.2.7
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              # rpk cluster health needs the admin API; poll the Kafka port instead.
+              until rpk cluster info --brokers redpanda:9092 >/dev/null 2>&1; do echo waiting for redpanda; sleep 3; done
+              rpk topic create hil.raw        -p 2  -c retention.ms=3600000  --brokers redpanda:9092 || true
+              rpk topic create swarm.bins     -p 16 -c retention.ms=3600000  --brokers redpanda:9092 || true
+              rpk topic create swarm.truth    -p 1  -c retention.ms=86400000 --brokers redpanda:9092 || true
+              rpk topic create interventions  -p 1  -c retention.ms=86400000 --brokers redpanda:9092 || true
+              rpk topic create neuro.features -p 16 -c retention.ms=3600000  --brokers redpanda:9092 || true
+              rpk topic create neuro.alerts   -p 4  -c retention.ms=86400000 --brokers redpanda:9092 || true
+              rpk topic list --brokers redpanda:9092
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redpanda-console
+  labels:
+    app: redpanda-console
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redpanda-console
+  template:
+    metadata:
+      labels:
+        app: redpanda-console
+    spec:
+      containers:
+        - name: console
+          image: docker.redpanda.com/redpandadata/console:v2.7.2
+          env:
+            - name: KAFKA_BROKERS
+              value: redpanda:9092
+          ports:
+            - { name: http, containerPort: 8080 }
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits: { cpu: 500m, memory: 512Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redpanda-console
+spec:
+  selector:
+    app: redpanda-console
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080

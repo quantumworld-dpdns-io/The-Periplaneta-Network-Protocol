@@ -1,0 +1,4 @@
+# Windows MAX_PATH workaround: librdkafka is built with MSBuild whose .tlog paths
+# exceed 260 chars under the default target/ directory on this repo path.
+[build]
+target-dir = "t"

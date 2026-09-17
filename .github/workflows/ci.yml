@@ -1,0 +1,187 @@
+name: ci
+
+on:
+  push:
+    branches: [haha]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# The project pivoted on 2026-09-11: `blattella/` is the core, and the streaming
+# stack it grew out of is frozen. The `blattella` job below is the one that
+# matters; the jobs for the frozen subsystems are kept so the archive stays
+# buildable, and can be dropped if they become a maintenance cost.
+
+jobs:
+  blattella:
+    name: blattella · the project core
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: netsim/requirements.txt
+      - run: pip install -r netsim/requirements.txt
+      - run: python -m pytest -q blattella/tests
+      - name: the model server answers
+        run: |
+          python -m uvicorn blattella.api:app --port 8000 &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8000/api/health && break; sleep 1; done
+          curl -sf -X POST http://127.0.0.1:8000/api/evolve \
+            -H 'content-type: application/json' \
+            -d '{"strategy":"rotation","generations":8,"population":150}' > /dev/null
+      - name: the commands the README promises
+        run: |
+          python -m blattella.cli describe
+          python -m blattella.cli chem
+          python -m blattella.cli evolve --strategy rotation --generations 10
+          python -m blattella.cli compare --seeds 3 --generations 12 --out /tmp/cmp
+          python -m blattella.cli neural
+      - name: provenance table is current
+        run: |
+          python -m blattella.cli provenance --out /tmp/PARAMETERS.md
+          diff /tmp/PARAMETERS.md docs/blattella/PARAMETERS.md
+
+  rust:
+    name: rust · ${{ matrix.crate }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { crate: mqtt-bridge, target: target }
+          - { crate: swarm-gen,   target: target }
+          # api-gateway/.cargo/config.toml sets target-dir = "t" (Windows MAX_PATH workaround)
+          - { crate: api-gateway, target: t }
+    defaults:
+      run:
+        working-directory: services/${{ matrix.crate }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      # rdkafka uses the cmake-build feature (vendored librdkafka); mqtt-bridge's
+      # .cargo/config.toml forces the Ninja generator.
+      # librdkafka's CMake build links curl, SASL, zlib and OpenSSL from the system
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends cmake ninja-build pkg-config libcurl4-openssl-dev libsasl2-dev libssl-dev zlib1g-dev
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: services/${{ matrix.crate }} -> ${{ matrix.target }}
+      - run: cargo build --locked --all-targets
+      - run: cargo test --locked
+
+  julia:
+    name: julia · ml + feature-worker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.10"
+      - uses: julia-actions/cache@v2
+      - name: ml tests (features, MLE recovery, wire offsets, detectors, sim)
+        run: |
+          julia --project=ml -e 'using Pkg; Pkg.instantiate()'
+          julia --project=ml -e 'using Pkg; Pkg.test()'
+      - name: feature-worker tests
+        working-directory: services/feature-worker
+        run: |
+          julia --project=. -e 'using Pkg; Pkg.instantiate()'
+          julia --project=. test/runtests.jl
+
+  dashboard:
+    name: dashboard · typecheck, unit tests, build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: dashboard/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      # the committed export is a published artifact and a fixture for the
+      # dashboard's contract test, so it must not drift from what the model writes
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r ../netsim/requirements.txt
+      - run: |
+          cd .. && python -m blattella.cli export --out /tmp/blattella.json
+          python - <<'PY'
+          import json
+          a = json.load(open("dashboard/public/blattella.json"))
+          b = json.load(open("/tmp/blattella.json"))
+          for d in (a, b): d.pop("generated", None)
+          assert a.keys() == b.keys(), "exported document changed shape; re-run just docs"
+          PY
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+
+  firmware:
+    name: firmware · native host tests + esp32 build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: firmware/hil-node
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.platformio
+            firmware/hil-node/.pio
+          key: pio-${{ runner.os }}-${{ hashFiles('firmware/hil-node/platformio.ini') }}
+      - run: pip install --upgrade platformio
+      - name: host tests (playback engine)
+        run: pio test -e native
+      - name: build hil0 (secrets.example.ini stands in for secrets.ini)
+        run: |
+          cp -n secrets.example.ini secrets.ini || true
+          pio run -e hil0
+
+  netsim:
+    name: netsim · pytest + quick sweep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: netsim/requirements.txt
+      - run: pip install -r netsim/requirements.txt
+      - run: python -m pytest -q netsim/tests
+      - run: python -m netsim.cli sweep --quick --out /tmp/netsim-out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: netsim-quick-sweep
+          path: /tmp/netsim-out
+
+  template-generator:
+    name: template generator (placeholder path)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy
+      - name: regenerate placeholder header into a temp path and diff symbol set against the committed one
+        run: |
+          python firmware/hil-node/tools/make_template.py -o /tmp/template.h
+          grep -o '^#define TPL_[A-Z_]*' firmware/hil-node/include/template.h | sort > /tmp/committed.syms
+          grep -o '^#define TPL_[A-Z_]*' /tmp/template.h | sort > /tmp/generated.syms
+          diff /tmp/committed.syms /tmp/generated.syms
