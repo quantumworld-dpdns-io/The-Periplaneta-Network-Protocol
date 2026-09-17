@@ -1,0 +1,134 @@
+1
+00:00:00,000 --> 00:00:07,063
+Insect neurons are cheap, sensitive, and
+already used as biosensors.
+
+2
+00:00:07,113 --> 00:00:12,084
+Everyone asks how early one neuron can
+warn you.
+
+3
+00:00:12,134 --> 00:00:21,603
+Nobody asks the deployment question: how many do you need, where, and how should
+they vote?
+
+4
+00:00:21,653 --> 00:00:24,950
+That is what this study answers.
+
+5
+00:00:25,000 --> 00:00:33,718
+The only empirical input is real:
+gamma-renewal fits to sixteen cockroach
+and locust units from two open Zenodo
+datasets.
+
+6
+00:00:33,768 --> 00:00:49,805
+Around them we simulate a toxic front
+spreading at one and a half units per
+second, sensors on a grid, at random, or
+clustered, one-second spike counts with
+measurement noise, and three detectors
+times three network rules.
+
+7
+00:00:49,855 --> 00:00:54,950
+Every pipeline is calibrated to the same
+false-alarm rate on null runs.
+
+8
+00:00:55,000 --> 00:00:56,604
+Here is one run.
+
+9
+00:00:56,654 --> 00:01:03,219
+Sixteen sensors on a grid, CUSUM with
+nearest-neighbour pooling.
+
+10
+00:01:03,269 --> 00:01:19,446
+The source collapses at sixty-six seconds;
+the network alarms at sixty, six seconds
+early, and places the source within eight
+percent of the domain diagonal.
+
+11
+00:01:19,496 --> 00:01:31,436
+The full study repeats this fifty-four times over sensor count, layout and noise,
+twenty seeds each, nine pipelines.
+
+12
+00:01:31,486 --> 00:01:34,950
+One command reproduces everything.
+
+13
+00:01:35,000 --> 00:01:35,865
+Three results.
+
+14
+00:01:35,915 --> 00:01:48,479
+First, pooling beats every other rule:
+seventy-five percent detection and about
+seven seconds of lead on average, versus
+sixty-three percent for the naive max rule
+at the same false-alarm rate.
+
+15
+00:01:48,529 --> 00:02:00,767
+Second, layout matters as much as count:
+sixteen grid sensors reach ninety-five
+percent detection; random placement needs
+thirty-six; clustered placement never
+reaches one hundred percent.
+
+16
+00:02:00,817 --> 00:02:06,649
+Third, a warning: the max rule collapses as you add sensors when the statistic is
+bounded.
+
+17
+00:02:06,699 --> 00:02:12,728
+BOCPD-plus-max drops from eighty to ten percent detection between nine and a
+hundred sensors.
+
+18
+00:02:12,778 --> 00:02:14,950
+Pooled BOCPD stays at one hundred.
+
+19
+00:02:15,000 --> 00:02:34,950
+The simulator is also an MCP server, so a
+research agent can run its own sweeps and
+get back the same numbers the command line
+produces.
+
+20
+00:02:35,000 --> 00:02:39,950
+What this is not: the front, the decay and
+the collapse endpoint are simulated.
+
+21
+00:02:40,000 --> 00:02:43,684
+This is a network-design study, not a
+biological lead time.
+
+22
+00:02:43,734 --> 00:02:45,266
+Rate is the only feature.
+
+23
+00:02:45,316 --> 00:02:49,950
+Next is validation on recordings with a
+real pharmacological intervention.
+
+24
+00:02:50,000 --> 00:02:56,924
+Code, data pipeline and the one-page
+abstract are in the repository.
+
+25
+00:02:56,974 --> 00:02:57,950
+Thank you.
+
