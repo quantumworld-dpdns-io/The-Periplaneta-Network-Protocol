@@ -1,0 +1,35 @@
+# kind cluster for Cockroach Internet: `kind create cluster --name cockroach --config deploy/kind-cluster.yaml`
+# Host port table (see docs/WS-D.md):
+#   30000 -> dashboard (NodePort)      http://localhost:30000
+#   30080 -> api-gateway (NodePort)    http://localhost:30080  (WS /ws/grid, /ws/node/{id})
+#   31883 -> mosquitto MQTT (NodePort) ESP32s on the LAN use <host-ip>:31883
+#   31901 -> mosquitto MQTT-over-WebSocket
+#   30081 -> redpanda-console (optional port-forward alternative)
+#   80    -> ingress-nginx (only if INSTALL_INGRESS=1)
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: cockroach
+nodes:
+  - role: control-plane
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+    extraPortMappings:
+      - containerPort: 30000
+        hostPort: 30000
+        protocol: TCP
+      - containerPort: 30080
+        hostPort: 30080
+        protocol: TCP
+      - containerPort: 31883
+        hostPort: 31883
+        protocol: TCP
+      - containerPort: 31901
+        hostPort: 31901
+        protocol: TCP
+      - containerPort: 80
+        hostPort: 80
+        protocol: TCP

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Cockroach Internet favicon: stylised cockroach silhouette, single colour -->
+  <rect width="64" height="64" rx="12" fill="#0a0e15"/>
+  <g fill="#f59e0b" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M32 18C40 18 43.5 27 43.5 36C43.5 47 39.5 55.5 32 55.5C24.5 55.5 20.5 47 20.5 36C20.5 27 24 18 32 18ZM32 10.5C36 10.5 37.5 13 37.5 15.5C37.5 18.5 35 19.8 32 19.8C29 19.8 26.5 18.5 26.5 15.5C26.5 13 28 10.5 32 10.5Z"/>
+    <path fill="none" d="M29.5 11.5C25 6 19 3.5 10 2.5M34.5 11.5C39 6 45 3.5 54 2.5M24 26L14 20L8 24.5M40 26L50 20L56 24.5M21.5 36L10 34L4.5 40.5M42.5 36L54 34L59.5 40.5M24 46L14 52.5L10 60.5M40 46L50 52.5L54 60.5"/>
+  </g>
+</svg>
