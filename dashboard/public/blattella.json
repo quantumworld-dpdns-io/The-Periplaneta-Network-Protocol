@@ -1,0 +1,4096 @@
+{
+ "generated": "2026-09-12T02:10:16Z",
+ "question": "Which insecticide deployment strategy -- rotation, mixture or single-product -- best delays resistance evolution in an interacting Blattella germanica colony?",
+ "answer": "Rotation, and specifically fast rotation. It is the only arm that holds target-site resistance below threshold in most runs while still killing well. The matched-dose mixture controls best and selects worst.",
+ "caveats": [
+  "Ground truth is simulated. The empirical inputs are the LD50s, the resistance ratio, the karyotype, the life history and the fitted spike statistics.",
+  "53 of 63 named parameters are assumptions, each with a declared sweep range. The systematic sensitivity analysis has not been run.",
+  "The fitness cost of resistance decides the headline result and has no published value for these alleles.",
+  "Neither ddG backend is fit to drive the science and both say so; the population layer uses the measured value.",
+  "No reinvasion from neighbouring units, which is among the strongest influences on real resistance dynamics."
+ ],
+ "parameters": {
+  "by_source": {
+   "assumption": 53,
+   "literature": 10
+  },
+  "assumptions_needing_sensitivity": [
+   {
+    "name": "harborage_radius",
+    "value": 3.0,
+    "unit": "cm",
+    "sweep": [
+     1.0,
+     8.0
+    ]
+   },
+   {
+    "name": "resource_radius",
+    "value": 2.0,
+    "unit": "cm",
+    "sweep": [
+     1.0,
+     5.0
+    ]
+   },
+   {
+    "name": "forage_speed",
+    "value": 2.5,
+    "unit": "cm/s",
+    "sweep": [
+     1.0,
+     6.0
+    ]
+   },
+   {
+    "name": "heading_persistence",
+    "value": 0.85,
+    "unit": "dimensionless",
+    "sweep": [
+     0.5,
+     0.97
+    ]
+   },
+   {
+    "name": "dark_emergence_rate",
+    "value": 0.85,
+    "unit": "1/min",
+    "sweep": [
+     0.1,
+     2.0
+    ]
+   },
+   {
+    "name": "light_emergence_rate",
+    "value": 0.05,
+    "unit": "1/min",
+    "sweep": [
+     0.0,
+     0.3
+    ]
+   },
+   {
+    "name": "pheromone_deposit",
+    "value": 1.0,
+    "unit": "arb/s",
+    "sweep": [
+     0.2,
+     5.0
+    ]
+   },
+   {
+    "name": "pheromone_decay",
+    "value": 0.0002777777777777778,
+    "unit": "1/s",
+    "sweep": [
+     1.1574074074074073e-05,
+     0.0016666666666666668
+    ]
+   },
+   {
+    "name": "pheromone_weight",
+    "value": 1.2,
+    "unit": "dimensionless",
+    "sweep": [
+     0.0,
+     4.0
+    ]
+   },
+   {
+    "name": "conspecific_weight",
+    "value": 0.6,
+    "unit": "dimensionless",
+    "sweep": [
+     0.0,
+     3.0
+    ]
+   },
+   {
+    "name": "conspecific_radius",
+    "value": 6.0,
+    "unit": "cm",
+    "sweep": [
+     2.0,
+     15.0
+    ]
+   },
+   {
+    "name": "repulsion_radius",
+    "value": 1.0,
+    "unit": "cm",
+    "sweep": [
+     0.3,
+     2.0
+    ]
+   },
+   {
+    "name": "repulsion_weight",
+    "value": 2.5,
+    "unit": "dimensionless",
+    "sweep": [
+     0.5,
+     6.0
+    ]
+   },
+   {
+    "name": "hunger_rate",
+    "value": 0.0001388888888888889,
+    "unit": "1/s",
+    "sweep": [
+     1.1574074074074073e-05,
+     0.0005555555555555556
+    ]
+   },
+   {
+    "name": "feed_rate",
+    "value": 0.008333333333333333,
+    "unit": "1/s",
+    "sweep": [
+     0.0016666666666666668,
+     0.03333333333333333
+    ]
+   },
+   {
+    "name": "goal_weight",
+    "value": 1.5,
+    "unit": "dimensionless",
+    "sweep": [
+     0.5,
+     4.0
+    ]
+   },
+   {
+    "name": "harborage_switch_prob",
+    "value": 0.15,
+    "unit": "per trip",
+    "sweep": [
+     0.0,
+     0.6
+    ]
+   },
+   {
+    "name": "contact_radius",
+    "value": 2.0,
+    "unit": "cm",
+    "sweep": [
+     0.5,
+     5.0
+    ]
+   },
+   {
+    "name": "probit_slope",
+    "value": 3.0,
+    "unit": "probit/log10(dose)",
+    "sweep": [
+     1.5,
+     6.0
+    ]
+   },
+   {
+    "name": "clearance_half_life_h",
+    "value": 24.0,
+    "unit": "h",
+    "sweep": [
+     4.0,
+     96.0
+    ]
+   },
+   {
+    "name": "gel_ingestion_rate",
+    "value": 0.03,
+    "unit": "mg/s",
+    "sweep": [
+     0.003,
+     0.3
+    ]
+   },
+   {
+    "name": "cuticular_transfer_rate",
+    "value": 0.002,
+    "unit": "1/s",
+    "sweep": [
+     0.0,
+     0.02
+    ]
+   },
+   {
+    "name": "faecal_shed_fraction",
+    "value": 0.0002777777777777778,
+    "unit": "1/s",
+    "sweep": [
+     1.1574074074074073e-05,
+     0.0016666666666666668
+    ]
+   },
+   {
+    "name": "faecal_uptake_rate",
+    "value": 0.05,
+    "unit": "1/s",
+    "sweep": [
+     0.0,
+     0.5
+    ]
+   },
+   {
+    "name": "residue_decay",
+    "value": 1.6534391534391535e-06,
+    "unit": "1/s",
+    "sweep": [
+     3.8580246913580245e-07,
+     1.1574074074074073e-05
+    ]
+   },
+   {
+    "name": "corpse_scavenge_rate",
+    "value": 0.01,
+    "unit": "1/s",
+    "sweep": [
+     0.0,
+     0.1
+    ]
+   },
+   {
+    "name": "corpse_persistence_h",
+    "value": 48.0,
+    "unit": "h",
+    "sweep": [
+     6.0,
+     168.0
+    ]
+   },
+   {
+    "name": "min_time_to_death_h",
+    "value": 8.0,
+    "unit": "h",
+    "sweep": [
+     1.0,
+     48.0
+    ]
+   },
+   {
+    "name": "ld50_imidacloprid",
+    "value": 0.01,
+    "unit": "ug/insect",
+    "sweep": [
+     0.001,
+     0.1
+    ]
+   },
+   {
+    "name": "lj_well_depth",
+    "value": 0.15,
+    "unit": "kcal/mol",
+    "sweep": [
+     0.05,
+     0.5
+    ]
+   },
+   {
+    "name": "contact_gap",
+    "value": 0.3,
+    "unit": "angstrom",
+    "sweep": [
+     -0.3,
+     2.0
+    ]
+   },
+   {
+    "name": "dielectric",
+    "value": 20.0,
+    "unit": "dimensionless",
+    "sweep": [
+     4.0,
+     80.0
+    ]
+   },
+   {
+    "name": "hydrophobic_coefficient",
+    "value": 0.025,
+    "unit": "kcal/(mol A^2)",
+    "sweep": [
+     0.005,
+     0.05
+    ]
+   },
+   {
+    "name": "aromatic_stacking",
+    "value": -0.8,
+    "unit": "kcal/mol",
+    "sweep": [
+     -2.0,
+     0.0
+    ]
+   },
+   {
+    "name": "hopping_scale",
+    "value": 0.55,
+    "unit": "eV",
+    "sweep": [
+     0.1,
+     1.5
+    ]
+   },
+   {
+    "name": "intersite_coulomb",
+    "value": 2.2,
+    "unit": "eV",
+    "sweep": [
+     0.5,
+     5.0
+    ]
+   },
+   {
+    "name": "ddg_scale",
+    "value": 0.15,
+    "unit": "dimensionless",
+    "sweep": [
+     0.02,
+     0.5
+    ]
+   },
+   {
+    "name": "map_length_cM",
+    "value": 100.0,
+    "unit": "cM",
+    "sweep": [
+     50.0,
+     200.0
+    ]
+   },
+   {
+    "name": "kdr_dominance",
+    "value": 0.5,
+    "unit": "dimensionless",
+    "sweep": [
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "name": "rdl_resistance_ratio",
+    "value": 10.0,
+    "unit": "fold",
+    "sweep": [
+     2.0,
+     200.0
+    ]
+   },
+   {
+    "name": "metabolic_dominance",
+    "value": 0.5,
+    "unit": "dimensionless",
+    "sweep": [
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "name": "metabolic_clearance_boost",
+    "value": 2.0,
+    "unit": "fold per allele copy",
+    "sweep": [
+     1.1,
+     6.0
+    ]
+   },
+   {
+    "name": "fitness_cost_target_site",
+    "value": 0.1,
+    "unit": "fraction",
+    "sweep": [
+     0.0,
+     0.35
+    ]
+   },
+   {
+    "name": "fitness_cost_metabolic",
+    "value": 0.05,
+    "unit": "fraction",
+    "sweep": [
+     0.0,
+     0.25
+    ]
+   },
+   {
+    "name": "juvenile_survival",
+    "value": 0.25,
+    "unit": "fraction",
+    "sweep": [
+     0.05,
+     0.6
+    ]
+   },
+   {
+    "name": "carrying_capacity",
+    "value": 400.0,
+    "unit": "adults",
+    "sweep": [
+     100.0,
+     5000.0
+    ]
+   },
+   {
+    "name": "sex_ratio",
+    "value": 0.5,
+    "unit": "fraction female",
+    "sweep": [
+     0.4,
+     0.6
+    ]
+   },
+   {
+    "name": "probit_slope",
+    "value": 3.0,
+    "unit": "probit/log10(dose)",
+    "sweep": [
+     1.5,
+     6.0
+    ]
+   },
+   {
+    "name": "excitation_peak",
+    "value": 3.0,
+    "unit": "fold",
+    "sweep": [
+     1.2,
+     8.0
+    ]
+   },
+   {
+    "name": "excitation_time_h",
+    "value": 2.0,
+    "unit": "h",
+    "sweep": [
+     0.1,
+     12.0
+    ]
+   },
+   {
+    "name": "block_time_h",
+    "value": 8.0,
+    "unit": "h",
+    "sweep": [
+     1.0,
+     48.0
+    ]
+   },
+   {
+    "name": "cv_gain",
+    "value": 1.8,
+    "unit": "fold",
+    "sweep": [
+     1.0,
+     4.0
+    ]
+   },
+   {
+    "name": "burden_midpoint",
+    "value": 1.0,
+    "unit": "LD50 units",
+    "sweep": [
+     0.05,
+     10.0
+    ]
+   }
+  ],
+  "literature": [
+   {
+    "name": "photophase_hours",
+    "value": 12.0,
+    "unit": "h",
+    "cite": "standard 12:12 LD regime used in Blattella germanica husbandry and assays"
+   },
+   {
+    "name": "bait_concentration",
+    "value": 0.0215,
+    "unit": "mass fraction",
+    "cite": "commercial gel bait formulated at 2.15 % imidacloprid (Maxforce Fusion), used as a representative field concentration"
+   },
+   {
+    "name": "ld50_deltamethrin",
+    "value": 0.004,
+    "unit": "ug/insect",
+    "cite": "topical LD50 for a susceptible Blattella germanica strain, ~0.004 ug/insect"
+   },
+   {
+    "name": "ld50_fipronil",
+    "value": 0.00133,
+    "unit": "ug/insect",
+    "cite": "topical LD50 for a susceptible Blattella germanica strain, 1.33 ng/insect"
+   },
+   {
+    "name": "pyrethroid_resistance_ratio",
+    "value": 202.0,
+    "unit": "fold",
+    "cite": "topical LD50 ratio of a field-collected Blattella germanica strain to a susceptible laboratory population for cypermethrin, 202 +/- 33"
+   },
+   {
+    "name": "resistance_ratio_sd",
+    "value": 33.0,
+    "unit": "fold",
+    "cite": "standard deviation reported alongside the cypermethrin resistance ratio"
+   },
+   {
+    "name": "chromosome_pairs",
+    "value": 21,
+    "unit": "pairs",
+    "cite": "Blattella germanica karyotype, 2n = 42"
+   },
+   {
+    "name": "eggs_per_ootheca",
+    "value": 30.0,
+    "unit": "eggs",
+    "cite": "an ootheca of Blattella germanica carries about 30 embryos, range 25-43"
+   },
+   {
+    "name": "oothecae_per_female",
+    "value": 6.0,
+    "unit": "oothecae",
+    "cite": "a female produces 4-8 oothecae in her lifetime; midpoint used"
+   },
+   {
+    "name": "generation_days",
+    "value": 100.0,
+    "unit": "days",
+    "cite": "egg to adult in about 100 days for Blattella germanica"
+   }
+  ]
+ },
+ "strategy": {
+  "config": {
+   "seeds": 12,
+   "generations": 40,
+   "exposed_fraction": 0.6,
+   "median_dose_ld50": 50.0
+  },
+  "summary": [
+   {
+    "strategy": "single:deltamethrin",
+    "seeds": 12,
+    "resistant_runs": 12,
+    "median_time_to_resistance": 12.0,
+    "peak_target_site_mean": 1.0,
+    "mean_population": 400.0,
+    "mean_survival": 0.7588,
+    "population_vs_untreated": 1.0,
+    "extinctions": 0,
+    "f_kdr": 1.0,
+    "f_rdl": 0.0143,
+    "f_cyp6": 0.061,
+    "f_est": 0.0365,
+    "f_gst": 0.0578
+   },
+   {
+    "strategy": "rotation:delt-imid-fipr",
+    "seeds": 12,
+    "resistant_runs": 3,
+    "median_time_to_resistance": 28.0,
+    "peak_target_site_mean": 0.3513,
+    "mean_population": 400.0,
+    "mean_survival": 0.4167,
+    "population_vs_untreated": 1.0,
+    "extinctions": 0,
+    "f_kdr": 0.3118,
+    "f_rdl": 0.0088,
+    "f_cyp6": 0.0014,
+    "f_est": 0.024,
+    "f_gst": 0.0241
+   },
+   {
+    "strategy": "rotation:delt-imid-fipr/3",
+    "seeds": 12,
+    "resistant_runs": 5,
+    "median_time_to_resistance": 31.0,
+    "peak_target_site_mean": 0.4959,
+    "mean_population": 400.0,
+    "mean_survival": 0.4234,
+    "population_vs_untreated": 1.0,
+    "extinctions": 0,
+    "f_kdr": 0.4684,
+    "f_rdl": 0.0144,
+    "f_cyp6": 0.0247,
+    "f_est": 0.0172,
+    "f_gst": 0.0252
+   },
+   {
+    "strategy": "mixture:delt-imid-fipr",
+    "seeds": 12,
+    "resistant_runs": 11,
+    "median_time_to_resistance": 8.0,
+    "peak_target_site_mean": 0.9245,
+    "mean_population": 398.9,
+    "mean_survival": 0.174,
+    "population_vs_untreated": 0.997,
+    "extinctions": 0,
+    "f_kdr": 0.9167,
+    "f_rdl": 0.6501,
+    "f_cyp6": 0.3639,
+    "f_est": 0.2901,
+    "f_gst": 0.0713
+   },
+   {
+    "strategy": "untreated",
+    "seeds": 12,
+    "resistant_runs": 0,
+    "median_time_to_resistance": null,
+    "peak_target_site_mean": 0.0669,
+    "mean_population": 400.0,
+    "mean_survival": 1.0,
+    "population_vs_untreated": 1.0,
+    "extinctions": 0,
+    "f_kdr": 0.0073,
+    "f_rdl": 0.0107,
+    "f_cyp6": 0.032,
+    "f_est": 0.0092,
+    "f_gst": 0.0232
+   }
+  ],
+  "trajectories": {
+   "single:deltamethrin": {
+    "description": "deltamethrin every generation",
+    "history": [
+     {
+      "generation": 0,
+      "n": 400,
+      "active": null,
+      "survival": null,
+      "f_kdr": 0.0563,
+      "f_rdl": 0.0563,
+      "f_cyp6": 0.0537,
+      "f_est": 0.0587,
+      "f_gst": 0.045
+     },
+     {
+      "generation": 1,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4075,
+      "f_kdr": 0.0712,
+      "f_rdl": 0.06,
+      "f_cyp6": 0.0413,
+      "f_est": 0.0325,
+      "f_gst": 0.0375
+     },
+     {
+      "generation": 2,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.405,
+      "f_kdr": 0.085,
+      "f_rdl": 0.045,
+      "f_cyp6": 0.0425,
+      "f_est": 0.0425,
+      "f_gst": 0.0425
+     },
+     {
+      "generation": 3,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.47,
+      "f_kdr": 0.0975,
+      "f_rdl": 0.04,
+      "f_cyp6": 0.0238,
+      "f_est": 0.0262,
+      "f_gst": 0.0625
+     },
+     {
+      "generation": 4,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.415,
+      "f_kdr": 0.09,
+      "f_rdl": 0.025,
+      "f_cyp6": 0.025,
+      "f_est": 0.0125,
+      "f_gst": 0.0675
+     },
+     {
+      "generation": 5,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.3975,
+      "f_kdr": 0.1263,
+      "f_rdl": 0.0213,
+      "f_cyp6": 0.0288,
+      "f_est": 0.025,
+      "f_gst": 0.0625
+     },
+     {
+      "generation": 6,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.445,
+      "f_kdr": 0.1638,
+      "f_rdl": 0.0138,
+      "f_cyp6": 0.0437,
+      "f_est": 0.0437,
+      "f_gst": 0.0512
+     },
+     {
+      "generation": 7,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.5025,
+      "f_kdr": 0.2075,
+      "f_rdl": 0.0088,
+      "f_cyp6": 0.0425,
+      "f_est": 0.0413,
+      "f_gst": 0.07
+     },
+     {
+      "generation": 8,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4675,
+      "f_kdr": 0.2275,
+      "f_rdl": 0.005,
+      "f_cyp6": 0.0413,
+      "f_est": 0.0587,
+      "f_gst": 0.0875
+     },
+     {
+      "generation": 9,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.445,
+      "f_kdr": 0.2863,
+      "f_rdl": 0.0037,
+      "f_cyp6": 0.0312,
+      "f_est": 0.035,
+      "f_gst": 0.0925
+     },
+     {
+      "generation": 10,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4875,
+      "f_kdr": 0.3225,
+      "f_rdl": 0.0025,
+      "f_cyp6": 0.035,
+      "f_est": 0.0475,
+      "f_gst": 0.1013
+     },
+     {
+      "generation": 11,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.475,
+      "f_kdr": 0.4125,
+      "f_rdl": 0.0037,
+      "f_cyp6": 0.0288,
+      "f_est": 0.0537,
+      "f_gst": 0.13
+     },
+     {
+      "generation": 12,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.5325,
+      "f_kdr": 0.535,
+      "f_rdl": 0.005,
+      "f_cyp6": 0.0213,
+      "f_est": 0.0537,
+      "f_gst": 0.115
+     },
+     {
+      "generation": 13,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.605,
+      "f_kdr": 0.5913,
+      "f_rdl": 0.005,
+      "f_cyp6": 0.0163,
+      "f_est": 0.0537,
+      "f_gst": 0.1212
+     },
+     {
+      "generation": 14,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.66,
+      "f_kdr": 0.6763,
+      "f_rdl": 0.0025,
+      "f_cyp6": 0.0163,
+      "f_est": 0.0737,
+      "f_gst": 0.135
+     },
+     {
+      "generation": 15,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.7075,
+      "f_kdr": 0.7712,
+      "f_rdl": 0.0013,
+      "f_cyp6": 0.0238,
+      "f_est": 0.0762,
+      "f_gst": 0.1375
+     },
+     {
+      "generation": 16,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.75,
+      "f_kdr": 0.8575,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.02,
+      "f_est": 0.075,
+      "f_gst": 0.1638
+     },
+     {
+      "generation": 17,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.8175,
+      "f_kdr": 0.91,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0187,
+      "f_est": 0.0737,
+      "f_gst": 0.1737
+     },
+     {
+      "generation": 18,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.89,
+      "f_kdr": 0.9387,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.015,
+      "f_est": 0.0625,
+      "f_gst": 0.1688
+     },
+     {
+      "generation": 19,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.9075,
+      "f_kdr": 0.9513,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0125,
+      "f_est": 0.0462,
+      "f_gst": 0.1638
+     },
+     {
+      "generation": 20,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.8825,
+      "f_kdr": 0.9712,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0175,
+      "f_est": 0.0437,
+      "f_gst": 0.16
+     },
+     {
+      "generation": 21,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.895,
+      "f_kdr": 0.98,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.02,
+      "f_est": 0.0475,
+      "f_gst": 0.18
+     },
+     {
+      "generation": 22,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.9325,
+      "f_kdr": 0.9888,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0225,
+      "f_est": 0.0537,
+      "f_gst": 0.1663
+     },
+     {
+      "generation": 23,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.9,
+      "f_kdr": 0.9962,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0225,
+      "f_est": 0.0587,
+      "f_gst": 0.1862
+     },
+     {
+      "generation": 24,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.9425,
+      "f_kdr": 0.995,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0213,
+      "f_est": 0.0525,
+      "f_gst": 0.1975
+     },
+     {
+      "generation": 25,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.94,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0112,
+      "f_est": 0.06,
+      "f_gst": 0.2213
+     },
+     {
+      "generation": 26,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.9425,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.01,
+      "f_est": 0.0525,
+      "f_gst": 0.2313
+     },
+     {
+      "generation": 27,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.9425,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0187,
+      "f_est": 0.0525,
+      "f_gst": 0.2313
+     },
+     {
+      "generation": 28,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.9275,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0175,
+      "f_est": 0.055,
+      "f_gst": 0.2525
+     },
+     {
+      "generation": 29,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.9575,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.015,
+      "f_est": 0.0575,
+      "f_gst": 0.2475
+     },
+     {
+      "generation": 30,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.945,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0125,
+      "f_est": 0.0625,
+      "f_gst": 0.2412
+     },
+     {
+      "generation": 31,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.95,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0125,
+      "f_est": 0.0675,
+      "f_gst": 0.2125
+     },
+     {
+      "generation": 32,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.935,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0138,
+      "f_est": 0.07,
+      "f_gst": 0.2013
+     },
+     {
+      "generation": 33,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.9475,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0063,
+      "f_est": 0.0825,
+      "f_gst": 0.1862
+     },
+     {
+      "generation": 34,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.935,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0112,
+      "f_est": 0.0938,
+      "f_gst": 0.1837
+     },
+     {
+      "generation": 35,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.96,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0088,
+      "f_est": 0.0887,
+      "f_gst": 0.21
+     },
+     {
+      "generation": 36,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.9425,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0063,
+      "f_est": 0.105,
+      "f_gst": 0.1862
+     },
+     {
+      "generation": 37,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.9225,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0088,
+      "f_est": 0.0975,
+      "f_gst": 0.185
+     },
+     {
+      "generation": 38,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.93,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.01,
+      "f_est": 0.0887,
+      "f_gst": 0.1713
+     },
+     {
+      "generation": 39,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.9125,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0112,
+      "f_est": 0.105,
+      "f_gst": 0.1537
+     },
+     {
+      "generation": 40,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.935,
+      "f_kdr": 1.0,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.005,
+      "f_est": 0.095,
+      "f_gst": 0.125
+     }
+    ]
+   },
+   "rotation:delt-imid-fipr": {
+    "description": "one active per 1 generation(s), cycling through 3",
+    "history": [
+     {
+      "generation": 0,
+      "n": 400,
+      "active": null,
+      "survival": null,
+      "f_kdr": 0.0563,
+      "f_rdl": 0.0563,
+      "f_cyp6": 0.0537,
+      "f_est": 0.0587,
+      "f_gst": 0.045
+     },
+     {
+      "generation": 1,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4075,
+      "f_kdr": 0.0712,
+      "f_rdl": 0.06,
+      "f_cyp6": 0.0413,
+      "f_est": 0.0325,
+      "f_gst": 0.0375
+     },
+     {
+      "generation": 2,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.3875,
+      "f_kdr": 0.065,
+      "f_rdl": 0.0387,
+      "f_cyp6": 0.0563,
+      "f_est": 0.0425,
+      "f_gst": 0.0462
+     },
+     {
+      "generation": 3,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.43,
+      "f_kdr": 0.0737,
+      "f_rdl": 0.0362,
+      "f_cyp6": 0.0612,
+      "f_est": 0.03,
+      "f_gst": 0.0275
+     },
+     {
+      "generation": 4,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.425,
+      "f_kdr": 0.1187,
+      "f_rdl": 0.0537,
+      "f_cyp6": 0.0625,
+      "f_est": 0.0325,
+      "f_gst": 0.04
+     },
+     {
+      "generation": 5,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.3575,
+      "f_kdr": 0.13,
+      "f_rdl": 0.0587,
+      "f_cyp6": 0.0425,
+      "f_est": 0.0225,
+      "f_gst": 0.0275
+     },
+     {
+      "generation": 6,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.4125,
+      "f_kdr": 0.12,
+      "f_rdl": 0.0712,
+      "f_cyp6": 0.05,
+      "f_est": 0.0262,
+      "f_gst": 0.01
+     },
+     {
+      "generation": 7,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.5125,
+      "f_kdr": 0.155,
+      "f_rdl": 0.065,
+      "f_cyp6": 0.05,
+      "f_est": 0.0262,
+      "f_gst": 0.005
+     },
+     {
+      "generation": 8,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.425,
+      "f_kdr": 0.1638,
+      "f_rdl": 0.0587,
+      "f_cyp6": 0.06,
+      "f_est": 0.0325,
+      "f_gst": 0.0025
+     },
+     {
+      "generation": 9,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.3575,
+      "f_kdr": 0.1825,
+      "f_rdl": 0.0638,
+      "f_cyp6": 0.0425,
+      "f_est": 0.0338,
+      "f_gst": 0.0025
+     },
+     {
+      "generation": 10,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4725,
+      "f_kdr": 0.2137,
+      "f_rdl": 0.0675,
+      "f_cyp6": 0.045,
+      "f_est": 0.015,
+      "f_gst": 0.0088
+     },
+     {
+      "generation": 11,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.3775,
+      "f_kdr": 0.2188,
+      "f_rdl": 0.0737,
+      "f_cyp6": 0.0437,
+      "f_est": 0.0075,
+      "f_gst": 0.0075
+     },
+     {
+      "generation": 12,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.395,
+      "f_kdr": 0.1787,
+      "f_rdl": 0.0737,
+      "f_cyp6": 0.0525,
+      "f_est": 0.005,
+      "f_gst": 0.0063
+     },
+     {
+      "generation": 13,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.46,
+      "f_kdr": 0.2062,
+      "f_rdl": 0.075,
+      "f_cyp6": 0.0425,
+      "f_est": 0.0112,
+      "f_gst": 0.0013
+     },
+     {
+      "generation": 14,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.39,
+      "f_kdr": 0.1775,
+      "f_rdl": 0.0838,
+      "f_cyp6": 0.0512,
+      "f_est": 0.0025,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 15,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.405,
+      "f_kdr": 0.165,
+      "f_rdl": 0.07,
+      "f_cyp6": 0.0825,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 16,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.415,
+      "f_kdr": 0.2037,
+      "f_rdl": 0.0675,
+      "f_cyp6": 0.0725,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 17,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.395,
+      "f_kdr": 0.2075,
+      "f_rdl": 0.0938,
+      "f_cyp6": 0.045,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 18,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.39,
+      "f_kdr": 0.175,
+      "f_rdl": 0.0988,
+      "f_cyp6": 0.0213,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 19,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4825,
+      "f_kdr": 0.2275,
+      "f_rdl": 0.0825,
+      "f_cyp6": 0.0175,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 20,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.41,
+      "f_kdr": 0.2275,
+      "f_rdl": 0.0587,
+      "f_cyp6": 0.0163,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 21,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.4025,
+      "f_kdr": 0.2587,
+      "f_rdl": 0.0437,
+      "f_cyp6": 0.01,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 22,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.525,
+      "f_kdr": 0.285,
+      "f_rdl": 0.0288,
+      "f_cyp6": 0.0075,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 23,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.385,
+      "f_kdr": 0.3162,
+      "f_rdl": 0.0275,
+      "f_cyp6": 0.01,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 24,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.37,
+      "f_kdr": 0.295,
+      "f_rdl": 0.0312,
+      "f_cyp6": 0.0025,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 25,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4775,
+      "f_kdr": 0.3625,
+      "f_rdl": 0.0275,
+      "f_cyp6": 0.0025,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 26,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.3725,
+      "f_kdr": 0.3362,
+      "f_rdl": 0.025,
+      "f_cyp6": 0.005,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 27,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.3825,
+      "f_kdr": 0.3237,
+      "f_rdl": 0.04,
+      "f_cyp6": 0.0075,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 28,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.505,
+      "f_kdr": 0.3663,
+      "f_rdl": 0.0475,
+      "f_cyp6": 0.005,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 29,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.3675,
+      "f_kdr": 0.3787,
+      "f_rdl": 0.0325,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 30,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.3675,
+      "f_kdr": 0.355,
+      "f_rdl": 0.0238,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 31,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.525,
+      "f_kdr": 0.41,
+      "f_rdl": 0.0187,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 32,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.39,
+      "f_kdr": 0.425,
+      "f_rdl": 0.0075,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 33,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.395,
+      "f_kdr": 0.3762,
+      "f_rdl": 0.0125,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 34,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.495,
+      "f_kdr": 0.4713,
+      "f_rdl": 0.0088,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 35,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.4025,
+      "f_kdr": 0.4587,
+      "f_rdl": 0.0025,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 36,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.39,
+      "f_kdr": 0.3762,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 37,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.5175,
+      "f_kdr": 0.465,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 38,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.4025,
+      "f_kdr": 0.4412,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 39,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.395,
+      "f_kdr": 0.47,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 40,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.5575,
+      "f_kdr": 0.6125,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     }
+    ]
+   },
+   "rotation:delt-imid-fipr/3": {
+    "description": "one active per 3 generation(s), cycling through 3",
+    "history": [
+     {
+      "generation": 0,
+      "n": 400,
+      "active": null,
+      "survival": null,
+      "f_kdr": 0.0563,
+      "f_rdl": 0.0563,
+      "f_cyp6": 0.0537,
+      "f_est": 0.0587,
+      "f_gst": 0.045
+     },
+     {
+      "generation": 1,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4075,
+      "f_kdr": 0.0712,
+      "f_rdl": 0.06,
+      "f_cyp6": 0.0413,
+      "f_est": 0.0325,
+      "f_gst": 0.0375
+     },
+     {
+      "generation": 2,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.405,
+      "f_kdr": 0.085,
+      "f_rdl": 0.045,
+      "f_cyp6": 0.0425,
+      "f_est": 0.0425,
+      "f_gst": 0.0425
+     },
+     {
+      "generation": 3,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.47,
+      "f_kdr": 0.0975,
+      "f_rdl": 0.04,
+      "f_cyp6": 0.0238,
+      "f_est": 0.0262,
+      "f_gst": 0.0625
+     },
+     {
+      "generation": 4,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.395,
+      "f_kdr": 0.0688,
+      "f_rdl": 0.04,
+      "f_cyp6": 0.025,
+      "f_est": 0.0163,
+      "f_gst": 0.0638
+     },
+     {
+      "generation": 5,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.365,
+      "f_kdr": 0.07,
+      "f_rdl": 0.0437,
+      "f_cyp6": 0.0387,
+      "f_est": 0.04,
+      "f_gst": 0.045
+     },
+     {
+      "generation": 6,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.4025,
+      "f_kdr": 0.0462,
+      "f_rdl": 0.0537,
+      "f_cyp6": 0.025,
+      "f_est": 0.02,
+      "f_gst": 0.0512
+     },
+     {
+      "generation": 7,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.465,
+      "f_kdr": 0.0563,
+      "f_rdl": 0.045,
+      "f_cyp6": 0.0338,
+      "f_est": 0.0275,
+      "f_gst": 0.0688
+     },
+     {
+      "generation": 8,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.43,
+      "f_kdr": 0.0475,
+      "f_rdl": 0.0413,
+      "f_cyp6": 0.03,
+      "f_est": 0.02,
+      "f_gst": 0.0838
+     },
+     {
+      "generation": 9,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.3525,
+      "f_kdr": 0.0825,
+      "f_rdl": 0.0375,
+      "f_cyp6": 0.0325,
+      "f_est": 0.005,
+      "f_gst": 0.0737
+     },
+     {
+      "generation": 10,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4575,
+      "f_kdr": 0.0762,
+      "f_rdl": 0.0262,
+      "f_cyp6": 0.0325,
+      "f_est": 0.0,
+      "f_gst": 0.06
+     },
+     {
+      "generation": 11,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4,
+      "f_kdr": 0.0762,
+      "f_rdl": 0.025,
+      "f_cyp6": 0.0413,
+      "f_est": 0.0,
+      "f_gst": 0.0762
+     },
+     {
+      "generation": 12,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4025,
+      "f_kdr": 0.1025,
+      "f_rdl": 0.015,
+      "f_cyp6": 0.0462,
+      "f_est": 0.0,
+      "f_gst": 0.06
+     },
+     {
+      "generation": 13,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.4275,
+      "f_kdr": 0.0887,
+      "f_rdl": 0.02,
+      "f_cyp6": 0.035,
+      "f_est": 0.0,
+      "f_gst": 0.0575
+     },
+     {
+      "generation": 14,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.3925,
+      "f_kdr": 0.095,
+      "f_rdl": 0.0075,
+      "f_cyp6": 0.0288,
+      "f_est": 0.0,
+      "f_gst": 0.0488
+     },
+     {
+      "generation": 15,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.39,
+      "f_kdr": 0.0912,
+      "f_rdl": 0.0063,
+      "f_cyp6": 0.03,
+      "f_est": 0.0,
+      "f_gst": 0.0475
+     },
+     {
+      "generation": 16,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.375,
+      "f_kdr": 0.0963,
+      "f_rdl": 0.01,
+      "f_cyp6": 0.0262,
+      "f_est": 0.0,
+      "f_gst": 0.0375
+     },
+     {
+      "generation": 17,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.38,
+      "f_kdr": 0.09,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.05,
+      "f_est": 0.0,
+      "f_gst": 0.0262
+     },
+     {
+      "generation": 18,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.4075,
+      "f_kdr": 0.0963,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.055,
+      "f_est": 0.0,
+      "f_gst": 0.0437
+     },
+     {
+      "generation": 19,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4825,
+      "f_kdr": 0.105,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0475,
+      "f_est": 0.0,
+      "f_gst": 0.0475
+     },
+     {
+      "generation": 20,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.445,
+      "f_kdr": 0.1325,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0537,
+      "f_est": 0.0,
+      "f_gst": 0.0425
+     },
+     {
+      "generation": 21,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4575,
+      "f_kdr": 0.1588,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.07,
+      "f_est": 0.0,
+      "f_gst": 0.0488
+     },
+     {
+      "generation": 22,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.4575,
+      "f_kdr": 0.1675,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0712,
+      "f_est": 0.0,
+      "f_gst": 0.05
+     },
+     {
+      "generation": 23,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.405,
+      "f_kdr": 0.1588,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0512,
+      "f_est": 0.0,
+      "f_gst": 0.05
+     },
+     {
+      "generation": 24,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.3825,
+      "f_kdr": 0.1537,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0362,
+      "f_est": 0.0,
+      "f_gst": 0.055
+     },
+     {
+      "generation": 25,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.3925,
+      "f_kdr": 0.1688,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0262,
+      "f_est": 0.0,
+      "f_gst": 0.0537
+     },
+     {
+      "generation": 26,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.3925,
+      "f_kdr": 0.1675,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0275,
+      "f_est": 0.0,
+      "f_gst": 0.0475
+     },
+     {
+      "generation": 27,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.41,
+      "f_kdr": 0.1575,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0125,
+      "f_est": 0.0,
+      "f_gst": 0.04
+     },
+     {
+      "generation": 28,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.455,
+      "f_kdr": 0.1925,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0025,
+      "f_est": 0.0,
+      "f_gst": 0.0425
+     },
+     {
+      "generation": 29,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.445,
+      "f_kdr": 0.24,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0013,
+      "f_est": 0.0,
+      "f_gst": 0.0413
+     },
+     {
+      "generation": 30,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4275,
+      "f_kdr": 0.28,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0462
+     },
+     {
+      "generation": 31,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.4075,
+      "f_kdr": 0.2963,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0325
+     },
+     {
+      "generation": 32,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.39,
+      "f_kdr": 0.2838,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0475
+     },
+     {
+      "generation": 33,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.4075,
+      "f_kdr": 0.2462,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0413
+     },
+     {
+      "generation": 34,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.385,
+      "f_kdr": 0.2112,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.03
+     },
+     {
+      "generation": 35,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.4475,
+      "f_kdr": 0.22,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0238
+     },
+     {
+      "generation": 36,
+      "n": 400,
+      "active": "fipronil",
+      "survival": 0.365,
+      "f_kdr": 0.1875,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0225
+     },
+     {
+      "generation": 37,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.445,
+      "f_kdr": 0.275,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0262
+     },
+     {
+      "generation": 38,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.4625,
+      "f_kdr": 0.3438,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0238
+     },
+     {
+      "generation": 39,
+      "n": 400,
+      "active": "deltamethrin",
+      "survival": 0.495,
+      "f_kdr": 0.4313,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.025
+     },
+     {
+      "generation": 40,
+      "n": 400,
+      "active": "imidacloprid",
+      "survival": 0.395,
+      "f_kdr": 0.4412,
+      "f_rdl": 0.0,
+      "f_cyp6": 0.0,
+      "f_est": 0.0,
+      "f_gst": 0.0338
+     }
+    ]
+   },
+   "mixture:delt-imid-fipr": {
+    "description": "3 actives simultaneously at 0.33 dose each",
+    "history": [
+     {
+      "generation": 0,
+      "n": 400,
+      "active": null,
+      "survival": null,
+      "f_kdr": 0.0563,
+      "f_rdl": 0.0563,
+      "f_cyp6": 0.0537,
+      "f_est": 0.0587,
+      "f_gst": 0.045
+     },
+     {
+      "generation": 1,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.09,
+      "f_kdr": 0.0425,
+      "f_rdl": 0.1025,
+      "f_cyp6": 0.0788,
+      "f_est": 0.0063,
+      "f_gst": 0.015
+     },
+     {
+      "generation": 2,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.0725,
+      "f_kdr": 0.0887,
+      "f_rdl": 0.1113,
+      "f_cyp6": 0.0488,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 3,
+      "n": 360,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.085,
+      "f_kdr": 0.15,
+      "f_rdl": 0.1611,
+      "f_cyp6": 0.0611,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 4,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.0972,
+      "f_kdr": 0.185,
+      "f_rdl": 0.22,
+      "f_cyp6": 0.1062,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 5,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.085,
+      "f_kdr": 0.255,
+      "f_rdl": 0.2525,
+      "f_cyp6": 0.065,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 6,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.105,
+      "f_kdr": 0.2687,
+      "f_rdl": 0.2275,
+      "f_cyp6": 0.0525,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 7,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.075,
+      "f_kdr": 0.2562,
+      "f_rdl": 0.2025,
+      "f_cyp6": 0.0488,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 8,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.1,
+      "f_kdr": 0.4375,
+      "f_rdl": 0.2775,
+      "f_cyp6": 0.0587,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 9,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.12,
+      "f_kdr": 0.4963,
+      "f_rdl": 0.3237,
+      "f_cyp6": 0.0338,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 10,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.1175,
+      "f_kdr": 0.4813,
+      "f_rdl": 0.3738,
+      "f_cyp6": 0.0187,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 11,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.12,
+      "f_kdr": 0.6062,
+      "f_rdl": 0.39,
+      "f_cyp6": 0.0387,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 12,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.1425,
+      "f_kdr": 0.6663,
+      "f_rdl": 0.5038,
+      "f_cyp6": 0.01,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 13,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.12,
+      "f_kdr": 0.6587,
+      "f_rdl": 0.5225,
+      "f_cyp6": 0.0163,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 14,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.15,
+      "f_kdr": 0.7325,
+      "f_rdl": 0.5975,
+      "f_cyp6": 0.0063,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 15,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.1575,
+      "f_kdr": 0.8037,
+      "f_rdl": 0.6737,
+      "f_cyp6": 0.0163,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 16,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.16,
+      "f_kdr": 0.8788,
+      "f_rdl": 0.7625,
+      "f_cyp6": 0.0425,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 17,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.195,
+      "f_kdr": 0.9375,
+      "f_rdl": 0.7887,
+      "f_cyp6": 0.0675,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 18,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.23,
+      "f_kdr": 0.9525,
+      "f_rdl": 0.855,
+      "f_cyp6": 0.07,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 19,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.2325,
+      "f_kdr": 0.9825,
+      "f_rdl": 0.8762,
+      "f_cyp6": 0.095,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 20,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.225,
+      "f_kdr": 0.9613,
+      "f_rdl": 0.895,
+      "f_cyp6": 0.11,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 21,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.215,
+      "f_kdr": 0.9862,
+      "f_rdl": 0.8538,
+      "f_cyp6": 0.1,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 22,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.22,
+      "f_kdr": 0.9975,
+      "f_rdl": 0.8712,
+      "f_cyp6": 0.1375,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 23,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.2225,
+      "f_kdr": 1.0,
+      "f_rdl": 0.8888,
+      "f_cyp6": 0.1762,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 24,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.2425,
+      "f_kdr": 1.0,
+      "f_rdl": 0.9537,
+      "f_cyp6": 0.1913,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 25,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.29,
+      "f_kdr": 1.0,
+      "f_rdl": 0.9637,
+      "f_cyp6": 0.215,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 26,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.26,
+      "f_kdr": 1.0,
+      "f_rdl": 0.9738,
+      "f_cyp6": 0.2275,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 27,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.255,
+      "f_kdr": 1.0,
+      "f_rdl": 0.9962,
+      "f_cyp6": 0.2025,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 28,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.26,
+      "f_kdr": 1.0,
+      "f_rdl": 1.0,
+      "f_cyp6": 0.2475,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 29,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.24,
+      "f_kdr": 1.0,
+      "f_rdl": 1.0,
+      "f_cyp6": 0.2425,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 30,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.275,
+      "f_kdr": 1.0,
+      "f_rdl": 1.0,
+      "f_cyp6": 0.2425,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 31,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.2825,
+      "f_kdr": 1.0,
+      "f_rdl": 1.0,
+      "f_cyp6": 0.2537,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 32,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.26,
+      "f_kdr": 1.0,
+      "f_rdl": 1.0,
+      "f_cyp6": 0.2587,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 33,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.2725,
+      "f_kdr": 1.0,
+      "f_rdl": 1.0,
+      "f_cyp6": 0.235,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 34,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.215,
+      "f_kdr": 1.0,
+      "f_rdl": 1.0,
+      "f_cyp6": 0.24,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 35,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.2475,
+      "f_kdr": 1.0,
+      "f_rdl": 1.0,
+      "f_cyp6": 0.2487,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 36,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.27,
+      "f_kdr": 1.0,
+      "f_rdl": 1.0,
+      "f_cyp6": 0.2825,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 37,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.2475,
+      "f_kdr": 1.0,
+      "f_rdl": 1.0,
+      "f_cyp6": 0.3,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 38,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.265,
+      "f_kdr": 1.0,
+      "f_rdl": 1.0,
+      "f_cyp6": 0.3513,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 39,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.2875,
+      "f_kdr": 1.0,
+      "f_rdl": 1.0,
+      "f_cyp6": 0.3425,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     },
+     {
+      "generation": 40,
+      "n": 400,
+      "active": "deltamethrin+imidacloprid+fipronil",
+      "survival": 0.2525,
+      "f_kdr": 1.0,
+      "f_rdl": 1.0,
+      "f_cyp6": 0.4088,
+      "f_est": 0.0,
+      "f_gst": 0.0
+     }
+    ]
+   },
+   "untreated": {
+    "description": "no insecticide; the control",
+    "history": [
+     {
+      "generation": 0,
+      "n": 400,
+      "active": null,
+      "survival": null,
+      "f_kdr": 0.0563,
+      "f_rdl": 0.0563,
+      "f_cyp6": 0.0537,
+      "f_est": 0.0587,
+      "f_gst": 0.045
+     },
+     {
+      "generation": 1,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.05,
+      "f_rdl": 0.0525,
+      "f_cyp6": 0.0563,
+      "f_est": 0.05,
+      "f_gst": 0.0462
+     },
+     {
+      "generation": 2,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.04,
+      "f_rdl": 0.0437,
+      "f_cyp6": 0.0475,
+      "f_est": 0.055,
+      "f_gst": 0.0475
+     },
+     {
+      "generation": 3,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0375,
+      "f_rdl": 0.045,
+      "f_cyp6": 0.0475,
+      "f_est": 0.0512,
+      "f_gst": 0.0512
+     },
+     {
+      "generation": 4,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0325,
+      "f_rdl": 0.0325,
+      "f_cyp6": 0.0425,
+      "f_est": 0.0638,
+      "f_gst": 0.0488
+     },
+     {
+      "generation": 5,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0288,
+      "f_rdl": 0.03,
+      "f_cyp6": 0.0437,
+      "f_est": 0.06,
+      "f_gst": 0.0425
+     },
+     {
+      "generation": 6,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0425,
+      "f_rdl": 0.0275,
+      "f_cyp6": 0.03,
+      "f_est": 0.045,
+      "f_gst": 0.03
+     },
+     {
+      "generation": 7,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.045,
+      "f_rdl": 0.0275,
+      "f_cyp6": 0.0138,
+      "f_est": 0.0413,
+      "f_gst": 0.0375
+     },
+     {
+      "generation": 8,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0575,
+      "f_rdl": 0.02,
+      "f_cyp6": 0.015,
+      "f_est": 0.0462,
+      "f_gst": 0.0375
+     },
+     {
+      "generation": 9,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0575,
+      "f_rdl": 0.025,
+      "f_cyp6": 0.015,
+      "f_est": 0.0325,
+      "f_gst": 0.0413
+     },
+     {
+      "generation": 10,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0675,
+      "f_rdl": 0.0262,
+      "f_cyp6": 0.0213,
+      "f_est": 0.0375,
+      "f_gst": 0.0375
+     },
+     {
+      "generation": 11,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0762,
+      "f_rdl": 0.0275,
+      "f_cyp6": 0.0163,
+      "f_est": 0.055,
+      "f_gst": 0.0413
+     },
+     {
+      "generation": 12,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.09,
+      "f_rdl": 0.0325,
+      "f_cyp6": 0.0112,
+      "f_est": 0.055,
+      "f_gst": 0.035
+     },
+     {
+      "generation": 13,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0938,
+      "f_rdl": 0.0275,
+      "f_cyp6": 0.01,
+      "f_est": 0.0512,
+      "f_gst": 0.04
+     },
+     {
+      "generation": 14,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.1037,
+      "f_rdl": 0.0375,
+      "f_cyp6": 0.0075,
+      "f_est": 0.0488,
+      "f_gst": 0.035
+     },
+     {
+      "generation": 15,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0862,
+      "f_rdl": 0.0338,
+      "f_cyp6": 0.0063,
+      "f_est": 0.0587,
+      "f_gst": 0.0325
+     },
+     {
+      "generation": 16,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.065,
+      "f_rdl": 0.0288,
+      "f_cyp6": 0.01,
+      "f_est": 0.0375,
+      "f_gst": 0.0413
+     },
+     {
+      "generation": 17,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0563,
+      "f_rdl": 0.0262,
+      "f_cyp6": 0.01,
+      "f_est": 0.0312,
+      "f_gst": 0.0462
+     },
+     {
+      "generation": 18,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0425,
+      "f_rdl": 0.0225,
+      "f_cyp6": 0.0063,
+      "f_est": 0.0387,
+      "f_gst": 0.0563
+     },
+     {
+      "generation": 19,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.045,
+      "f_rdl": 0.02,
+      "f_cyp6": 0.0075,
+      "f_est": 0.035,
+      "f_gst": 0.0425
+     },
+     {
+      "generation": 20,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0375,
+      "f_rdl": 0.02,
+      "f_cyp6": 0.0088,
+      "f_est": 0.0288,
+      "f_gst": 0.0462
+     },
+     {
+      "generation": 21,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.04,
+      "f_rdl": 0.0238,
+      "f_cyp6": 0.0125,
+      "f_est": 0.035,
+      "f_gst": 0.0525
+     },
+     {
+      "generation": 22,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0425,
+      "f_rdl": 0.03,
+      "f_cyp6": 0.0125,
+      "f_est": 0.0312,
+      "f_gst": 0.055
+     },
+     {
+      "generation": 23,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0325,
+      "f_rdl": 0.0288,
+      "f_cyp6": 0.0063,
+      "f_est": 0.0225,
+      "f_gst": 0.0512
+     },
+     {
+      "generation": 24,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0312,
+      "f_rdl": 0.02,
+      "f_cyp6": 0.0063,
+      "f_est": 0.0275,
+      "f_gst": 0.055
+     },
+     {
+      "generation": 25,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0312,
+      "f_rdl": 0.0262,
+      "f_cyp6": 0.0088,
+      "f_est": 0.025,
+      "f_gst": 0.0462
+     },
+     {
+      "generation": 26,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.025,
+      "f_rdl": 0.0312,
+      "f_cyp6": 0.0075,
+      "f_est": 0.0163,
+      "f_gst": 0.045
+     },
+     {
+      "generation": 27,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.025,
+      "f_rdl": 0.0312,
+      "f_cyp6": 0.0075,
+      "f_est": 0.0125,
+      "f_gst": 0.0425
+     },
+     {
+      "generation": 28,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0325,
+      "f_rdl": 0.03,
+      "f_cyp6": 0.0088,
+      "f_est": 0.0112,
+      "f_gst": 0.0462
+     },
+     {
+      "generation": 29,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0375,
+      "f_rdl": 0.0213,
+      "f_cyp6": 0.0075,
+      "f_est": 0.0125,
+      "f_gst": 0.045
+     },
+     {
+      "generation": 30,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0338,
+      "f_rdl": 0.0225,
+      "f_cyp6": 0.0075,
+      "f_est": 0.0075,
+      "f_gst": 0.0425
+     },
+     {
+      "generation": 31,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0262,
+      "f_rdl": 0.0175,
+      "f_cyp6": 0.0037,
+      "f_est": 0.005,
+      "f_gst": 0.0462
+     },
+     {
+      "generation": 32,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.03,
+      "f_rdl": 0.0112,
+      "f_cyp6": 0.0075,
+      "f_est": 0.0013,
+      "f_gst": 0.0325
+     },
+     {
+      "generation": 33,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.02,
+      "f_rdl": 0.0112,
+      "f_cyp6": 0.0037,
+      "f_est": 0.0013,
+      "f_gst": 0.0362
+     },
+     {
+      "generation": 34,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0225,
+      "f_rdl": 0.0075,
+      "f_cyp6": 0.0025,
+      "f_est": 0.0013,
+      "f_gst": 0.045
+     },
+     {
+      "generation": 35,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.02,
+      "f_rdl": 0.0125,
+      "f_cyp6": 0.005,
+      "f_est": 0.0037,
+      "f_gst": 0.0462
+     },
+     {
+      "generation": 36,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.02,
+      "f_rdl": 0.0112,
+      "f_cyp6": 0.0037,
+      "f_est": 0.005,
+      "f_gst": 0.0437
+     },
+     {
+      "generation": 37,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0187,
+      "f_rdl": 0.01,
+      "f_cyp6": 0.005,
+      "f_est": 0.005,
+      "f_gst": 0.0338
+     },
+     {
+      "generation": 38,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0138,
+      "f_rdl": 0.015,
+      "f_cyp6": 0.0025,
+      "f_est": 0.005,
+      "f_gst": 0.0387
+     },
+     {
+      "generation": 39,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0138,
+      "f_rdl": 0.0238,
+      "f_cyp6": 0.0013,
+      "f_est": 0.0075,
+      "f_gst": 0.0338
+     },
+     {
+      "generation": 40,
+      "n": 400,
+      "active": null,
+      "survival": 1.0,
+      "f_kdr": 0.0075,
+      "f_rdl": 0.0225,
+      "f_cyp6": 0.0013,
+      "f_est": 0.005,
+      "f_gst": 0.03
+     }
+    ]
+   }
+  }
+ },
+ "contact": {
+  "config": {
+   "n": 150,
+   "hours": 4.0,
+   "arena_cm": 300.0,
+   "harborages": 6,
+   "resources": 3
+  },
+  "network": {
+   "n": 150,
+   "edges": 4041,
+   "density": 0.36161,
+   "mean_degree": 53.88,
+   "max_degree": 87,
+   "isolated": 0,
+   "mean_contact_seconds": 371629.09,
+   "largest_component_fraction": 0.6733,
+   "observed_seconds": 14400.0
+  },
+  "harborages": [
+   {
+    "x": 152.12789244604625,
+    "y": 8.0,
+    "r": 3.0
+   },
+   {
+    "x": 292.0,
+    "y": 231.0834653386684,
+    "r": 3.0
+   },
+   {
+    "x": 85.94873028953407,
+    "y": 292.0,
+    "r": 3.0
+   },
+   {
+    "x": 8.0,
+    "y": 230.75690048470392,
+    "r": 3.0
+   },
+   {
+    "x": 116.1296613618874,
+    "y": 8.0,
+    "r": 3.0
+   },
+   {
+    "x": 292.0,
+    "y": 136.19876081506362,
+    "r": 3.0
+   }
+  ],
+  "resources": [
+   {
+    "x": 199.15538907306626,
+    "y": 136.3798704553742,
+    "r": 2.0
+   },
+   {
+    "x": 157.43905315095893,
+    "y": 79.13386698646025,
+    "r": 2.0
+   },
+   {
+    "x": 188.026966301221,
+    "y": 155.72149698289172,
+    "r": 2.0
+   }
+  ],
+  "positions": [
+   [
+    86.6,
+    291.7
+   ],
+   [
+    290.1,
+    136.0
+   ],
+   [
+    116.7,
+    9.4
+   ],
+   [
+    289.3,
+    136.0
+   ],
+   [
+    152.4,
+    10.5
+   ],
+   [
+    152.9,
+    10.9
+   ],
+   [
+    116.4,
+    9.4
+   ],
+   [
+    291.4,
+    135.3
+   ],
+   [
+    289.9,
+    135.6
+   ],
+   [
+    292.1,
+    228.4
+   ],
+   [
+    290.2,
+    136.2
+   ],
+   [
+    291.7,
+    135.3
+   ],
+   [
+    289.7,
+    229.4
+   ],
+   [
+    152.2,
+    10.3
+   ],
+   [
+    290.3,
+    136.1
+   ],
+   [
+    289.6,
+    136.5
+   ],
+   [
+    9.8,
+    229.8
+   ],
+   [
+    291.3,
+    135.4
+   ],
+   [
+    153.5,
+    10.1
+   ],
+   [
+    152.2,
+    10.3
+   ],
+   [
+    290.2,
+    136.4
+   ],
+   [
+    116.3,
+    9.0
+   ],
+   [
+    289.3,
+    136.3
+   ],
+   [
+    10.5,
+    229.6
+   ],
+   [
+    117.8,
+    10.5
+   ],
+   [
+    289.9,
+    229.3
+   ],
+   [
+    86.5,
+    290.1
+   ],
+   [
+    152.3,
+    10.7
+   ],
+   [
+    152.4,
+    10.3
+   ],
+   [
+    290.4,
+    138.5
+   ],
+   [
+    152.3,
+    10.6
+   ],
+   [
+    290.3,
+    135.7
+   ],
+   [
+    290.5,
+    136.2
+   ],
+   [
+    152.2,
+    9.2
+   ],
+   [
+    86.6,
+    289.8
+   ],
+   [
+    86.0,
+    290.3
+   ],
+   [
+    290.5,
+    136.6
+   ],
+   [
+    290.2,
+    229.0
+   ],
+   [
+    151.0,
+    170.5
+   ],
+   [
+    291.2,
+    229.5
+   ],
+   [
+    152.3,
+    10.2
+   ],
+   [
+    116.6,
+    10.3
+   ],
+   [
+    152.1,
+    8.9
+   ],
+   [
+    289.8,
+    229.3
+   ],
+   [
+    87.1,
+    289.9
+   ],
+   [
+    86.1,
+    289.9
+   ],
+   [
+    151.3,
+    9.3
+   ],
+   [
+    290.3,
+    135.7
+   ],
+   [
+    152.6,
+    10.2
+   ],
+   [
+    289.7,
+    136.4
+   ],
+   [
+    156.0,
+    78.8
+   ],
+   [
+    117.4,
+    9.4
+   ],
+   [
+    289.5,
+    136.5
+   ],
+   [
+    9.3,
+    229.7
+   ],
+   [
+    290.4,
+    136.3
+   ],
+   [
+    289.2,
+    135.9
+   ],
+   [
+    117.1,
+    9.8
+   ],
+   [
+    152.2,
+    10.3
+   ],
+   [
+    291.0,
+    229.9
+   ],
+   [
+    289.8,
+    138.2
+   ],
+   [
+    290.2,
+    136.3
+   ],
+   [
+    290.5,
+    136.3
+   ],
+   [
+    291.3,
+    229.3
+   ],
+   [
+    152.0,
+    9.5
+   ],
+   [
+    290.3,
+    134.1
+   ],
+   [
+    9.8,
+    229.9
+   ],
+   [
+    86.3,
+    290.0
+   ],
+   [
+    117.5,
+    9.9
+   ],
+   [
+    289.8,
+    136.3
+   ],
+   [
+    289.1,
+    136.3
+   ],
+   [
+    116.4,
+    8.9
+   ],
+   [
+    289.1,
+    135.7
+   ],
+   [
+    290.4,
+    136.2
+   ],
+   [
+    152.2,
+    10.2
+   ],
+   [
+    152.0,
+    9.2
+   ],
+   [
+    289.0,
+    136.1
+   ],
+   [
+    289.7,
+    136.4
+   ],
+   [
+    86.8,
+    289.6
+   ],
+   [
+    289.6,
+    136.2
+   ],
+   [
+    151.5,
+    10.9
+   ],
+   [
+    86.3,
+    290.0
+   ],
+   [
+    291.2,
+    136.3
+   ],
+   [
+    152.3,
+    10.0
+   ],
+   [
+    289.8,
+    136.1
+   ],
+   [
+    289.8,
+    135.6
+   ],
+   [
+    256.5,
+    140.5
+   ],
+   [
+    158.9,
+    79.8
+   ],
+   [
+    291.8,
+    229.0
+   ],
+   [
+    87.3,
+    290.0
+   ],
+   [
+    290.3,
+    136.9
+   ],
+   [
+    290.1,
+    136.0
+   ],
+   [
+    9.3,
+    229.7
+   ],
+   [
+    116.6,
+    9.6
+   ],
+   [
+    289.0,
+    136.5
+   ],
+   [
+    289.2,
+    136.1
+   ],
+   [
+    152.6,
+    10.7
+   ],
+   [
+    151.9,
+    9.8
+   ],
+   [
+    152.9,
+    10.3
+   ],
+   [
+    9.6,
+    229.7
+   ],
+   [
+    152.4,
+    9.8
+   ],
+   [
+    153.3,
+    8.8
+   ],
+   [
+    116.5,
+    9.1
+   ],
+   [
+    152.3,
+    10.9
+   ],
+   [
+    116.7,
+    10.1
+   ],
+   [
+    223.1,
+    134.0
+   ],
+   [
+    289.4,
+    136.4
+   ],
+   [
+    290.1,
+    137.7
+   ],
+   [
+    117.8,
+    10.2
+   ],
+   [
+    291.0,
+    136.0
+   ],
+   [
+    289.9,
+    136.3
+   ],
+   [
+    290.2,
+    137.4
+   ],
+   [
+    152.3,
+    10.4
+   ],
+   [
+    290.4,
+    138.6
+   ],
+   [
+    289.4,
+    136.6
+   ],
+   [
+    117.7,
+    8.0
+   ],
+   [
+    291.4,
+    136.8
+   ],
+   [
+    289.4,
+    136.2
+   ],
+   [
+    289.6,
+    136.3
+   ],
+   [
+    290.6,
+    136.3
+   ],
+   [
+    289.1,
+    135.6
+   ],
+   [
+    291.2,
+    135.7
+   ],
+   [
+    289.9,
+    136.6
+   ],
+   [
+    289.0,
+    136.1
+   ],
+   [
+    152.3,
+    10.7
+   ],
+   [
+    289.1,
+    136.2
+   ],
+   [
+    9.7,
+    229.5
+   ],
+   [
+    289.9,
+    136.5
+   ],
+   [
+    117.5,
+    10.2
+   ],
+   [
+    289.8,
+    136.3
+   ],
+   [
+    289.4,
+    135.8
+   ],
+   [
+    289.9,
+    136.4
+   ],
+   [
+    289.9,
+    229.4
+   ],
+   [
+    87.4,
+    289.4
+   ],
+   [
+    290.3,
+    229.4
+   ],
+   [
+    151.6,
+    9.8
+   ],
+   [
+    10.1,
+    229.3
+   ],
+   [
+    291.1,
+    135.9
+   ],
+   [
+    152.2,
+    9.5
+   ],
+   [
+    289.3,
+    136.4
+   ],
+   [
+    290.8,
+    136.9
+   ],
+   [
+    290.3,
+    136.9
+   ],
+   [
+    150.3,
+    10.2
+   ],
+   [
+    152.4,
+    10.5
+   ],
+   [
+    290.7,
+    136.0
+   ],
+   [
+    290.1,
+    136.4
+   ],
+   [
+    290.1,
+    136.1
+   ],
+   [
+    116.7,
+    8.7
+   ],
+   [
+    290.3,
+    136.8
+   ],
+   [
+    290.2,
+    135.9
+   ],
+   [
+    289.7,
+    136.3
+   ]
+  ],
+  "degree": [
+   33,
+   75,
+   27,
+   69,
+   38,
+   36,
+   35,
+   69,
+   80,
+   26,
+   69,
+   78,
+   23,
+   48,
+   80,
+   80,
+   25,
+   80,
+   39,
+   39,
+   69,
+   27,
+   69,
+   24,
+   41,
+   22,
+   31,
+   48,
+   39,
+   86,
+   39,
+   84,
+   69,
+   33,
+   31,
+   40,
+   69,
+   23,
+   27,
+   35,
+   37,
+   26,
+   39,
+   29,
+   27,
+   39,
+   33,
+   69,
+   48,
+   69,
+   34,
+   40,
+   82,
+   22,
+   69,
+   87,
+   27,
+   33,
+   24,
+   68,
+   81,
+   86,
+   28,
+   39,
+   78,
+   41,
+   25,
+   42,
+   84,
+   82,
+   41,
+   69,
+   84,
+   35,
+   47,
+   86,
+   69,
+   39,
+   79,
+   37,
+   25,
+   75,
+   48,
+   69,
+   80,
+   78,
+   48,
+   38,
+   40,
+   69,
+   79,
+   29,
+   42,
+   85,
+   69,
+   48,
+   37,
+   37,
+   21,
+   48,
+   37,
+   26,
+   48,
+   35,
+   69,
+   83,
+   87,
+   28,
+   85,
+   84,
+   83,
+   35,
+   81,
+   69,
+   27,
+   69,
+   69,
+   69,
+   80,
+   81,
+   80,
+   85,
+   68,
+   38,
+   68,
+   23,
+   85,
+   28,
+   80,
+   69,
+   69,
+   25,
+   26,
+   35,
+   48,
+   26,
+   69,
+   48,
+   69,
+   69,
+   69,
+   34,
+   39,
+   81,
+   83,
+   69,
+   26,
+   78,
+   78,
+   78
+  ],
+  "trips": [
+   5,
+   5,
+   5,
+   6,
+   6,
+   5,
+   5,
+   5,
+   6,
+   5,
+   5,
+   5,
+   5,
+   5,
+   5,
+   5,
+   5,
+   6,
+   6,
+   6,
+   5,
+   5,
+   6,
+   5,
+   6,
+   5,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   5,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   5,
+   6,
+   6,
+   5,
+   6,
+   5,
+   6,
+   5,
+   6,
+   6,
+   6,
+   5,
+   5,
+   5,
+   5,
+   5,
+   5,
+   5,
+   6,
+   5,
+   6,
+   6,
+   6,
+   5,
+   6,
+   5,
+   6,
+   6,
+   6,
+   6,
+   6,
+   5,
+   5,
+   6,
+   6,
+   6,
+   6,
+   5,
+   6,
+   5,
+   5,
+   5,
+   5,
+   5,
+   6,
+   6,
+   6,
+   6,
+   6,
+   5,
+   6,
+   6,
+   6,
+   5,
+   6,
+   6,
+   6,
+   5,
+   5,
+   6,
+   5,
+   6,
+   6,
+   6,
+   5,
+   6,
+   6,
+   6,
+   6,
+   5,
+   5,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   5,
+   5,
+   4,
+   6,
+   6,
+   6,
+   6,
+   5,
+   6,
+   5,
+   5,
+   6,
+   5,
+   5,
+   5,
+   6,
+   5,
+   5,
+   6,
+   6,
+   5,
+   6,
+   6,
+   5,
+   6,
+   6,
+   6,
+   6,
+   6,
+   5,
+   6,
+   5
+  ]
+ },
+ "chemistry": {
+  "case": {
+   "target": "Vssc",
+   "gene": "para",
+   "mutation": "L993F",
+   "ligand": "deltamethrin",
+   "note": "knockdown resistance; domain II S6 helix of the para-type sodium channel"
+  },
+  "reference": {
+   "ddg_kcal_per_mol": 3.1451,
+   "uncertainty": 0.0968,
+   "implied_resistance_ratio": 202.0,
+   "backend": "literature",
+   "maturity": "reference",
+   "note": "RT ln(202) at 298.15 K; whole-organism ratio, so this is an upper bound on the target-site contribution"
+  },
+  "backends": [
+   {
+    "ddg_kcal_per_mol": 0.2009,
+    "uncertainty": 0.0005,
+    "implied_resistance_ratio": 1.4,
+    "backend": "classical-mm",
+    "maturity": "demonstration",
+    "note": "reduced molecular mechanics on tabulated residue properties; no protein structure is used, so this is a stand-in for docking or FEP rather than a substitute for it",
+    "error_vs_reference_kcal": -2.9441,
+    "within_reference_uncertainty": false,
+    "resistance_ratio_fold_error": 0.007,
+    "sign_agrees_with_reference": true
+   },
+   {
+    "ddg_kcal_per_mol": -1.7474,
+    "uncertainty": 2.7959,
+    "implied_resistance_ratio": 0.05,
+    "backend": "quantum-vqe",
+    "maturity": "demonstration",
+    "note": "VQE on a two-site extended Hubbard model of the residue and ligand frontier orbitals; not an ab initio calculation of the binding site, and scaled to a free energy by an unpinnable factor",
+    "error_vs_reference_kcal": -4.8925,
+    "within_reference_uncertainty": false,
+    "resistance_ratio_fold_error": 0.0,
+    "sign_agrees_with_reference": false
+   }
+  ]
+ },
+ "neural": {
+  "burden_ld50": 0.5,
+  "species_caveat": "single-unit parameters are fitted to Periplaneta americana and locust antennal lobe recordings and used here as a prior for Blattella germanica; this is extrapolation, not measurement",
+  "testable_orderings": [
+   "fipronil holds an elevated firing rate at 24 h, when deltamethrin and imidacloprid have fallen back toward or below baseline, because it removes inhibition rather than acting on the spike-generating channel",
+   "all three raise the firing rate before any of them lowers it, so an early drop with no excitatory phase would falsify the mapping",
+   "ISI variability rises before the rate falls, so irregularity is the earlier marker of intoxication"
+  ],
+  "known_blind_spots": [
+   "deltamethrin and imidacloprid are indistinguishable in this model: it separates blocking from non-blocking targets and has no per-target kinetics",
+   "no active-specific difference in ISI variability is predicted, because the variability term is shared across the three"
+  ],
+  "rows": [
+   {
+    "active": "deltamethrin",
+    "hours": 0.5,
+    "burden_ld50": 0.5,
+    "rate_hz": 8.467,
+    "rate_fold": 1.437,
+    "isi_cv": 1.286,
+    "cv_fold": 1.056,
+    "fano": 1.525,
+    "silent": false
+   },
+   {
+    "active": "deltamethrin",
+    "hours": 2.0,
+    "burden_ld50": 0.5,
+    "rate_hz": 10.25,
+    "rate_fold": 1.739,
+    "isi_cv": 1.39,
+    "cv_fold": 1.141,
+    "fano": 2.23,
+    "silent": false
+   },
+   {
+    "active": "deltamethrin",
+    "hours": 8.0,
+    "burden_ld50": 0.5,
+    "rate_hz": 7.333,
+    "rate_fold": 1.244,
+    "isi_cv": 1.61,
+    "cv_fold": 1.322,
+    "fano": 2.885,
+    "silent": false
+   },
+   {
+    "active": "deltamethrin",
+    "hours": 24.0,
+    "burden_ld50": 0.5,
+    "rate_hz": 2.833,
+    "rate_fold": 0.481,
+    "isi_cv": 1.407,
+    "cv_fold": 1.155,
+    "fano": 2.52,
+    "silent": false
+   },
+   {
+    "active": "imidacloprid",
+    "hours": 0.5,
+    "burden_ld50": 0.5,
+    "rate_hz": 8.467,
+    "rate_fold": 1.437,
+    "isi_cv": 1.286,
+    "cv_fold": 1.056,
+    "fano": 1.525,
+    "silent": false
+   },
+   {
+    "active": "imidacloprid",
+    "hours": 2.0,
+    "burden_ld50": 0.5,
+    "rate_hz": 10.25,
+    "rate_fold": 1.739,
+    "isi_cv": 1.39,
+    "cv_fold": 1.141,
+    "fano": 2.23,
+    "silent": false
+   },
+   {
+    "active": "imidacloprid",
+    "hours": 8.0,
+    "burden_ld50": 0.5,
+    "rate_hz": 7.333,
+    "rate_fold": 1.244,
+    "isi_cv": 1.61,
+    "cv_fold": 1.322,
+    "fano": 2.885,
+    "silent": false
+   },
+   {
+    "active": "imidacloprid",
+    "hours": 24.0,
+    "burden_ld50": 0.5,
+    "rate_hz": 2.833,
+    "rate_fold": 0.481,
+    "isi_cv": 1.407,
+    "cv_fold": 1.155,
+    "fano": 2.52,
+    "silent": false
+   },
+   {
+    "active": "fipronil",
+    "hours": 0.5,
+    "burden_ld50": 0.5,
+    "rate_hz": 8.467,
+    "rate_fold": 1.437,
+    "isi_cv": 1.286,
+    "cv_fold": 1.056,
+    "fano": 1.525,
+    "silent": false
+   },
+   {
+    "active": "fipronil",
+    "hours": 2.0,
+    "burden_ld50": 0.5,
+    "rate_hz": 10.25,
+    "rate_fold": 1.739,
+    "isi_cv": 1.39,
+    "cv_fold": 1.141,
+    "fano": 2.23,
+    "silent": false
+   },
+   {
+    "active": "fipronil",
+    "hours": 8.0,
+    "burden_ld50": 0.5,
+    "rate_hz": 7.333,
+    "rate_fold": 1.244,
+    "isi_cv": 1.61,
+    "cv_fold": 1.322,
+    "fano": 2.885,
+    "silent": false
+   },
+   {
+    "active": "fipronil",
+    "hours": 24.0,
+    "burden_ld50": 0.5,
+    "rate_hz": 6.333,
+    "rate_fold": 1.075,
+    "isi_cv": 1.642,
+    "cv_fold": 1.348,
+    "fano": 2.93,
+    "silent": false
+   }
+  ]
+ }
+}

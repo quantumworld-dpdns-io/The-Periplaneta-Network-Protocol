@@ -1,0 +1,47 @@
+# data & artifacts
+data/raw/
+data/cache/
+ml/artifacts/*.bson
+*.h5
+*.npz
+
+# rust
+target/
+
+# julia
+ml/Manifest.toml
+services/feature-worker/Manifest.toml
+*.so
+*.dll
+
+# node
+node_modules/
+.next/
+out/
+
+# platformio
+.pio/
+firmware/**/.vscode/
+firmware/.env
+
+# env / secrets
+.env
+.env.local
+
+# misc
+.DS_Store
+Thumbs.db
+
+
+# editor / assistant scratch (never shipped)
+.claude/
+.ignore/
+.cursor/
+NEUROHACK GENERAL PARTICIPANT'S GUIDE.pdf
+
+# python study module
+.venv/
+netsim/out/
+__pycache__/
+.pytest_cache/
+docs/blattella/PHASE_LOG.md
