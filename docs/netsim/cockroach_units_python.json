@@ -1,0 +1,89 @@
+{
+  "source": "zenodo:10.5281/zenodo.14281 spont trains, netsim.renewal.fit_spike_train",
+  "units": [
+    {
+      "unit": "e060517/Neuron1",
+      "n_spikes": 356,
+      "shape": 0.641,
+      "rate_hz": 5.8927,
+      "refractory_ms": 2.263
+    },
+    {
+      "unit": "e060517/Neuron2",
+      "n_spikes": 490,
+      "shape": 0.6461,
+      "rate_hz": 8.1045,
+      "refractory_ms": 1.7947
+    },
+    {
+      "unit": "e060517/Neuron3",
+      "n_spikes": 216,
+      "shape": 0.6055,
+      "rate_hz": 3.6272,
+      "refractory_ms": 8.6627
+    },
+    {
+      "unit": "e060817/Neuron1",
+      "n_spikes": 529,
+      "shape": 1.7248,
+      "rate_hz": 9.0766,
+      "refractory_ms": 0.0
+    },
+    {
+      "unit": "e060817/Neuron2",
+      "n_spikes": 1229,
+      "shape": 0.4608,
+      "rate_hz": 21.2165,
+      "refractory_ms": 1.7166
+    },
+    {
+      "unit": "e060817/Neuron3",
+      "n_spikes": 781,
+      "shape": 1.1931,
+      "rate_hz": 13.4274,
+      "refractory_ms": 0.7565
+    },
+    {
+      "unit": "e060824/Neuron1",
+      "n_spikes": 505,
+      "shape": 0.4969,
+      "rate_hz": 8.6911,
+      "refractory_ms": 8.1945
+    },
+    {
+      "unit": "e060824/Neuron2",
+      "n_spikes": 64,
+      "shape": 0.6691,
+      "rate_hz": 1.1002,
+      "refractory_ms": 10.9262
+    },
+    {
+      "unit": "e070528/Neuron1",
+      "n_spikes": 336,
+      "shape": 0.6608,
+      "rate_hz": 5.5643,
+      "refractory_ms": 6.7897
+    },
+    {
+      "unit": "e070528/Neuron2",
+      "n_spikes": 1173,
+      "shape": 0.5794,
+      "rate_hz": 19.3915,
+      "refractory_ms": 4.0581
+    },
+    {
+      "unit": "e070528/Neuron3",
+      "n_spikes": 1834,
+      "shape": 1.1962,
+      "rate_hz": 30.3459,
+      "refractory_ms": 1.4797
+    },
+    {
+      "unit": "e070528/Neuron4",
+      "n_spikes": 1015,
+      "shape": 0.7573,
+      "rate_hz": 16.7925,
+      "refractory_ms": 4.3702
+    }
+  ]
+}

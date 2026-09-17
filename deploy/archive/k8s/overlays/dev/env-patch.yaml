@@ -1,0 +1,9 @@
+# Dev-sized swarm and verbose logging. Bump SWARM_NODES back to 100000 for
+# the full demo once the kind node has >= 4 CPUs / 8 GiB available.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cockroach-env
+data:
+  SWARM_NODES: "100000"
+  RUST_LOG: info,swarm_gen=debug,api_gateway=debug
