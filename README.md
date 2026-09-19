@@ -49,7 +49,7 @@ is simulated, limitations) · `docs/EVAL.md` (generated evaluation) ·
 `docs/DEMO.md` (demo runbook) · `docs/WS-A.md` … `docs/WS-D.md` (per-subsystem
 run notes) · `docs/FUTURE.md`.
 
-## Layout
+## Layout :
 
 | Path | What | Stack |
 |---|---|---|
